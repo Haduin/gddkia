@@ -1,6 +1,6 @@
 package pl.gddkia.group;
 
-public enum GROUPS {
+public enum GROUP_NAME {
     NAWIERZCHNIA(1),
     POBOCZA_PASY_ROZDZIALU(2),
     KORPUS_DROGI(3),
@@ -15,11 +15,11 @@ public enum GROUPS {
 
     private final int value;
 
-    GROUPS(int value) {
+    GROUP_NAME(int value) {
         this.value = value;
     }
 
-    public static  GROUPS findByValue(int value) {
+    public static GROUP_NAME findByValue(int value) {
         return switch (value) {
             case 1 -> NAWIERZCHNIA;
             case 2 -> POBOCZA_PASY_ROZDZIALU;

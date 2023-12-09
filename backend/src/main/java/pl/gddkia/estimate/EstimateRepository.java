@@ -1,4 +1,6 @@
 package pl.gddkia.estimate;
 
-public interface EstimateRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface EstimateRepository extends JpaRepository<Estimate, Long> {
 }
