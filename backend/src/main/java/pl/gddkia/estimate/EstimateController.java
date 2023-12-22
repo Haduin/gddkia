@@ -36,12 +36,8 @@ public class EstimateController {
     }
 
 
-    @GetMapping
+    @GetMapping()
     public List<EstimateRest> getAllEstimate(){
         return estimateService.getEstimate();
-    }
-    @GetMapping
-    public EstimateRest getAllEstimateByName(@RequestParam String estimateName){
-        return estimateService.getEstimate(estimateName);
     }
 }

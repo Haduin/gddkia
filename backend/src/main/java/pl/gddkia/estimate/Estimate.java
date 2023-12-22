@@ -2,6 +2,7 @@ package pl.gddkia.estimate;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.gddkia.group.Group;
 import pl.gddkia.region.Region;
@@ -12,6 +13,7 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class Estimate {
     @Id
     @Column(name = "estimate_id")

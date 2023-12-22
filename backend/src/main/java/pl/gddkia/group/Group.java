@@ -2,6 +2,7 @@ package pl.gddkia.group;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.gddkia.estimate.Estimate;
 import pl.gddkia.job.Job;
@@ -11,6 +12,7 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 @Table(name = "group_table")
 public class Group {
     @Id

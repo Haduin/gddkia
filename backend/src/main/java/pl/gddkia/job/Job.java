@@ -2,12 +2,14 @@ package pl.gddkia.job;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.gddkia.group.Group;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 @Table(name = "job")
 public class Job {
 
@@ -20,6 +22,8 @@ public class Job {
     private String unit;
     private Double costEstimate;
     private Double quantity;
+    private String subType;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
     private Group group;
