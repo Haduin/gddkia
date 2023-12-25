@@ -27,17 +27,4 @@ public class Job {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
     private Group group;
-
-    @Override
-    public String toString() {
-        return "Job{" +
-                "id=" + id +
-                ", SST='" + SST + '\'' +
-                ", description='" + description + '\'' +
-                ", unit='" + unit + '\'' +
-                ", costEstimate=" + costEstimate +
-                ", quantity=" + quantity +
-                ", group=" + group +
-                '}';
-    }
 }

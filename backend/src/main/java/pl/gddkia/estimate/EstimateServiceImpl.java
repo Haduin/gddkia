@@ -37,9 +37,13 @@ public class EstimateServiceImpl implements EstimateService {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     @Transactional
-    @Override       //TODO rewrite this code to be more clear
+    @Override
     public void addNewEstimate(final AddNewEstimateRest rest, final InputStream inputStream) throws IOException {
 
+        /*
+            TODO add inputStream file validation
+            TODO repository objects finding saving
+         */
         Workbook workbook = WorkbookFactory.create(inputStream);
         Optional<Region> regionOptional = regionRepository.findByRegionNameEquals(rest.regionName());
 
@@ -80,7 +84,7 @@ public class EstimateServiceImpl implements EstimateService {
                 }
 
                 if (!isRowEmpty(row) && skipRows) {
-                    if (row.getCell(2).toString() != "") {
+                    if (!row.getCell(2).toString().isEmpty()) {
                         sst = row.getCell(2).toString();
                     }
 
@@ -96,15 +100,10 @@ public class EstimateServiceImpl implements EstimateService {
                                     group
                             )
                     );
-
-
                 }
             }
             jobRepository.saveAll(jobList);
         }
-
-
-
         workbook.close();
     }
 
@@ -138,6 +137,7 @@ public class EstimateServiceImpl implements EstimateService {
 
                 )).toList();
     }
+
     @Override
     public EstimateRest getEstimate(String estimateName) {
         return null;
