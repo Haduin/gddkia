@@ -3,9 +3,12 @@ package pl.gddkia.estimate;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.stereotype.Service;
 import pl.gddkia.branch.BranchRepository;
+import pl.gddkia.exceptions.RegionNotFoundException;
 import pl.gddkia.group.GROUP_NAME;
 import pl.gddkia.group.Group;
 import pl.gddkia.group.GroupRepository;
@@ -22,7 +25,6 @@ import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,24 +36,27 @@ public class EstimateServiceImpl implements EstimateService {
     private final BranchRepository branchRepository;
     private final RegionRepository regionRepository;
 
+
+    private final Logger LOGGER = LogManager.getLogger(EstimateServiceImpl.class);
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     @Transactional
     @Override
     public void addNewEstimate(final AddNewEstimateRest rest, final InputStream inputStream) throws IOException {
-
+        LOGGER.info("Start saving data from file");
         /*
             TODO add inputStream file validation
             TODO repository objects finding saving
          */
         Workbook workbook = WorkbookFactory.create(inputStream);
-        Optional<Region> regionOptional = regionRepository.findByRegionNameEquals(rest.regionName());
+        Region regionOptional = regionRepository.findByRegionNameEquals(rest.regionName())
+                .orElseThrow(() -> new RegionNotFoundException(rest.regionName()));
 
-        Estimate estimate = new Estimate(null, rest.contractName(), convertStringToOffsetDateTime(rest.dateFrom()), convertStringToOffsetDateTime(rest.dateTo()), null, regionOptional.get());
-        regionOptional.get().getEstimates().add(estimate);
+        Estimate estimate = new Estimate(null, rest.contractName(), convertStringToOffsetDateTime(rest.dateFrom()), convertStringToOffsetDateTime(rest.dateTo()), null, regionOptional);
+        regionOptional.getEstimates().add(estimate);
         estimateRepository.save(estimate);
 
-        regionOptional.ifPresent(regionRepository::save);
+        regionRepository.save(regionOptional);
 
         String sst = "";
 
@@ -71,13 +76,13 @@ public class EstimateServiceImpl implements EstimateService {
                     continue;
                 }
 
+                //Determines the subtype
                 String checkIfSubtype = getContentIfNotAllCellsEmpty(row);
                 if (StringUtils.isNotEmpty(checkIfSubtype)) {
                     localSubType = checkIfSubtype;
-                    System.out.println(localSubType);
                     continue;
                 }
-
+                //Determines when to stop reading Cells in file
                 if (skipRows && row.getCell(0) != null && row.getCell(0).toString().contains("RAZEM")) {
                     skipRows = false;
                     continue;
@@ -94,8 +99,8 @@ public class EstimateServiceImpl implements EstimateService {
                                     sst,
                                     row.getCell(3).toString(),
                                     row.getCell(4).toString(),
-                                    row.getCell(5).toString() != null && !row.getCell(5).getCellType().name().isBlank() && !row.getCell(5).toString().isEmpty() ? Double.parseDouble(row.getCell(5).toString()) : null,
-                                    row.getCell(6).toString() != null && !row.getCell(6).getCellType().name().isBlank() && !row.getCell(6).toString().isEmpty() ? Double.parseDouble(row.getCell(6).toString()) : null,
+                                    validateUnitPrice(row.getCell(5)),
+                                    validateUnitPrice(row.getCell(6)),
                                     localSubType,
                                     group
                             )
@@ -105,6 +110,29 @@ public class EstimateServiceImpl implements EstimateService {
             jobRepository.saveAll(jobList);
         }
         workbook.close();
+        LOGGER.info("End of data");
+    }
+
+    //TODO change to predicate validator or sth better
+    private Double validateUnitPrice(Cell cell) {
+        return cell.toString() != null &&
+                !cell.getCellType().name().isBlank() &&
+                !cell.toString().isEmpty() ?
+                parseStringCellValue(cell.toString()) : null;
+    }
+
+    private Double parseStringCellValue(String stringValue) {
+        String numericValue = stringValue.substring(0, stringValue.length() - 3).trim();
+        if (stringValue.endsWith(" zł")) {
+            if (numericValue.contains(".") || numericValue.contains(",")) {
+                numericValue = numericValue.replace(',', '.');
+            }
+        }
+        try {
+            return Double.parseDouble(numericValue);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     @Override
@@ -143,17 +171,27 @@ public class EstimateServiceImpl implements EstimateService {
         return null;
     }
 
-    private static String getContentIfNotAllCellsEmpty(Row row) {
+    public OffsetDateTime convertStringToOffsetDateTime(String dateString) {
+        try {
+            LocalDate localDate = LocalDate.parse(dateString, formatter);
+            return OffsetDateTime.of(localDate.atStartOfDay(), OffsetDateTime.now().getOffset());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private String getContentIfNotAllCellsEmpty(Row row) {
         boolean hasNonEmptyCell = false;
 
         for (int i = row.getFirstCellNum(); i < row.getLastCellNum(); i++) {
             Cell cell = row.getCell(i);
 
+            //checks if something is under index of cell
             if (i == 1 || i == 3) {
                 continue;
             }
 
-            if (cell.getCellType() != CellType.BLANK) {
+            if (cell != null && cell.getCellType() != CellType.BLANK) {
                 hasNonEmptyCell = true;
                 break;
             }
@@ -178,14 +216,5 @@ public class EstimateServiceImpl implements EstimateService {
             }
         }
         return true;
-    }
-
-    public OffsetDateTime convertStringToOffsetDateTime(String dateString) {
-        try {
-            LocalDate localDate = LocalDate.parse(dateString, formatter);
-            return OffsetDateTime.of(localDate.atStartOfDay(), OffsetDateTime.now().getOffset());
-        } catch (Exception e) {
-            return null;
-        }
     }
 }

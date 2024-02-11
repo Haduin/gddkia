@@ -6,5 +6,6 @@ public record JobRest(
         String unit,
         Double costEstimate,
         Double quantity,
-        String subType) {
+        String subType
+) {
 }
