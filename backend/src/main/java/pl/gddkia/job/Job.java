@@ -20,6 +20,7 @@ public class Job {
     private String SST;
     private String description;
     private String unit;
+    @Column(columnDefinition = "double precision default 1")
     private Double costEstimate;
     private Double quantity;
     private String subType;

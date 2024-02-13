@@ -20,7 +20,6 @@ const Header = ({ open, handleDrawerToggle }) => {
   const iconBackColor = 'grey.100';
   const iconBackColorOpen = 'grey.200';
 
-  console.log(open)
   // common header
   const mainHeader = (
     <Toolbar>

@@ -9,28 +9,15 @@ import { useEffect, useState } from 'react';
 import config from '../../config';
 
 const columns = [
-  { field: 'SST', headerName: 'SST', width: 80 },
+  { field: 'sst', headerName: 'SST', width: 120 },
   { field: 'description', headerName: 'Opis', width: 900 },
-  { field: 'unit', headerName: 'Jednostka', width: 70 },
+  { field: 'unit', headerName: 'Jednostka', width: 100 },
   {
-    headerName: 'Kosztorys',
+    headerName: 'Sredni kosztorys',
     field: 'costEstimate',
     type: 'number',
-    width: 90
-  },
-  {
-    headerName: 'Ilość',
-    field: 'quantity',
-    description: 'This column has a value getter and is not sortable.',
-    width: 50
-  },
-  {
-    headerName: 'Wycena',
-    field: 'all',
-    description: 'This column has a value getter and is not sortable.',
-    width: 100
+    width: 120
   }
-
 ];
 
 function Table() {
@@ -59,12 +46,10 @@ function Table() {
           (
             {
               'id': index,
-              'SST': obj.SST,
+              'sst': obj.sst,
               'description': obj.description,
               'unit': obj.unit,
-              'costEstimate': obj.costEstimate,
-              'quantity': obj.quantity,
-              'all': Math.round(obj.costEstimate * obj.quantity)
+              'costEstimate': obj.costEstimate
             }
           )
         ));
@@ -77,7 +62,7 @@ function Table() {
 
 
   return (
-    <Grid>
+    <Grid style={{ width: '100%' }}>
       <Grid style={{ display: 'flex', justifyContent: 'center' }}>
         <TextField
           label="Wyszukaj"
@@ -87,19 +72,19 @@ function Table() {
           style={{ marginBottom: '20px', marginTop: '20px' }}
         />
       </Grid>
-      <Grid style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '2px' }}>
-        {/*<FormControl fullWidth>*/}
-        {/*  <InputLabel>Region</InputLabel>*/}
-        {/*  <Select label="Nazwa regionu">*/}
-        {/*    <MenuItem value={0}>Brak</MenuItem>*/}
-        {/*    {region?.map(eln => (*/}
-        {/*      <MenuItem key={eln.id} value={eln.id}>{eln.regionName}</MenuItem>*/}
-        {/*    ))}*/}
+      {/*<Grid style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '2px' }}>*/}
+      {/*  /!*<FormControl fullWidth>*!/*/}
+      {/*  /!*  <InputLabel>Region</InputLabel>*!/*/}
+      {/*  /!*  <Select label="Nazwa regionu">*!/*/}
+      {/*  /!*    <MenuItem value={0}>Brak</MenuItem>*!/*/}
+      {/*  /!*    {region?.map(eln => (*!/*/}
+      {/*  /!*      <MenuItem key={eln.id} value={eln.id}>{eln.regionName}</MenuItem>*!/*/}
+      {/*  /!*    ))}*!/*/}
 
-        {/*  </Select>*/}
-        {/*</FormControl>*/}
-      </Grid>
-      <Grid style={{ width: '100%' }}>
+      {/*  /!*  </Select>*!/*/}
+      {/*  /!*</FormControl>*!/*/}
+      {/*</Grid>*/}
+      <Grid>
         <DataGrid
           rows={filteredRows}
           columns={columns}

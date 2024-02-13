@@ -16,7 +16,7 @@ public class JobController {
     private final JobService jobService;
 
     @GetMapping()
-    public List<JobRest> getAllEstimate(){
-        return jobService.getAllJobs();
+    public List<AvgJobsDetails> getAllEstimate(){
+        return jobService.getAllJobsWithMeanEstimate();
     }
 }
