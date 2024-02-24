@@ -1,12 +1,11 @@
-
 // material-ui
 import {
   Grid
 } from '@mui/material';
 
 // project import
-import OrdersTable from './OrdersTable';
 import MainCard from 'components/MainCard';
+import MeanTerTable from './MeanTerTable';
 
 // sales report status
 
@@ -16,13 +15,10 @@ import MainCard from 'components/MainCard';
 const MeanTerDashboard = () => {
 
   return (
-    <Grid container
-          justifyContent="center"
-          alignItems="center">
-        <MainCard content={false}>
-          <OrdersTable />
-        </MainCard>
-
+    <Grid container justifyContent="center" alignItems="center">
+      <MainCard content={false}>
+        <MeanTerTable />
+      </MainCard>
     </Grid>
   );
 };

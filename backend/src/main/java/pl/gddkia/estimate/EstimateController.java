@@ -20,16 +20,16 @@ public class EstimateController {
             @RequestPart MultipartFile file,
             @RequestParam("companyName") String companyName,
             @RequestParam("contractName") String contractName,
-            @RequestParam("dateFrom") String dateFrom,
-            @RequestParam("dateTo") String dateTo,
+//            @RequestParam("dateFrom") String dateFrom,
+//            @RequestParam("dateTo") String dateTo,
             @RequestParam("regionName") String regionName,
             @RequestParam("branchName") String branchName
     ) throws IOException {
         estimateService.addNewEstimate(new AddNewEstimateRest(
                 companyName,
                 contractName,
-                dateFrom,
-                dateTo,
+                null,
+                null,
                 regionName,
                 branchName
         ), file.getInputStream());

@@ -6,7 +6,7 @@ import { Box, Grid, TableContainer, TextField } from '@mui/material';
 // third-party
 // project import
 import { useEffect, useState } from 'react';
-import config from '../../config';
+import config from '../../../config';
 
 const columns = [
   { field: 'sst', headerName: 'SST', width: 120 },
@@ -99,7 +99,7 @@ Table.propTypes = {};
 
 // ==============================|| ORDER TABLE ||============================== //
 
-export default function OrderTable() {
+export default function MeanTerTable() {
 
   return (
     <Box>
