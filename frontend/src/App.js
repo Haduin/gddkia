@@ -1,14 +1,19 @@
-import './App.css';
+// project import
+import Routes from 'routes';
+import ThemeCustomization from 'themes';
+import ScrollTop from 'components/ScrollTop';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+// ==============================|| APP - THEME, ROUTER, LOCAL  ||============================== //
 
-function App() {
-  return (
-    <div className="App">
-        <div className="flex bg-cyan-500 sm:bg-red-500 md:bg-red-900 justify-between ">
-            <button> Akcja 1</button>
-            <button> Akcja 2</button>
-        </div>
-    </div>
-  );
-}
+const App = () => (
+  <ThemeCustomization>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <ScrollTop>
+          <Routes />
+        </ScrollTop>
+    </LocalizationProvider>
+  </ThemeCustomization>
+);
 
 export default App;
