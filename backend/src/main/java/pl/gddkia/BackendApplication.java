@@ -14,6 +14,8 @@ import pl.gddkia.group.GroupRepository;
 import pl.gddkia.job.JobRepository;
 import pl.gddkia.region.Region;
 import pl.gddkia.region.RegionRepository;
+import pl.gddkia.security.EntityAuthUser;
+import pl.gddkia.security.EntityAuthUserRepository;
 
 @SpringBootApplication
 @RequiredArgsConstructor
@@ -23,6 +25,7 @@ public class BackendApplication implements ApplicationRunner {
 	private final EstimateRepository estimateRepository;
 	private final BranchRepository branchRepository;
 	private final RegionRepository regionRepository;
+	private final EntityAuthUserRepository entityAuthUserRepository;
 	public static void main(String[] args) {
 		SpringApplication.run(BackendApplication.class, args);
 	}
@@ -33,6 +36,7 @@ public class BackendApplication implements ApplicationRunner {
 branchRepository.save(branch);
 		Region Siedlce = new Region(null,"Siedlce",branch,null);
 		regionRepository.save(Siedlce);
+		entityAuthUserRepository.save(new EntityAuthUser(1L,"user","$2a$12$/6wOhkZScK/4el54TuWrguE/l.C2YLPp.tRJuLujhPp.b9XG0P/2q"));
 	}
 
 	@RestController
