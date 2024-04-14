@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 // material-ui
 import {
@@ -21,12 +21,13 @@ import AnimateButton from 'components/@extended/AnimateButton';
 
 // assets
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
+import { UserContext } from '../../../App';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
-const AuthLogin = ({handleLogin}) => {
+const AuthLogin = () => {
   // const [checked, setChecked] = React.useState(false);
-
+  const { userData, setUserData } = useContext(UserContext);
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -52,7 +53,7 @@ const AuthLogin = ({handleLogin}) => {
           try {
             setStatus({ success: false });
             setSubmitting(false);
-            handleLogin(values)
+            setUserData({ email: values.email, password: values.password });
           } catch (err) {
             setStatus({ success: false });
             setErrors({ submit: err.message });
@@ -145,7 +146,8 @@ const AuthLogin = ({handleLogin}) => {
               {/*)}*/}
               <Grid item xs={12}>
                 <AnimateButton>
-                  <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="primary">
+                  <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit"
+                          variant="contained" color="primary">
                     Login
                   </Button>
                 </AnimateButton>

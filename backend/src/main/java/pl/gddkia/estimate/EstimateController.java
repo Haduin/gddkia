@@ -11,7 +11,6 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin
 @RequestMapping("/estimate")
 public class EstimateController {
     private final EstimateService estimateService;

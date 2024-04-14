@@ -10,5 +10,5 @@ export const sendNewTer = (file, companyName, contractNumber, regionName, branch
   formData.append('dateTo', '10/10/2022');
   formData.append('regionName', regionName);
   formData.append('branchName', branchName);
-  axios.post(config.backend + '/estimate/upload', formData).then(response => console.log(response));
+  axios.post('/estimate/upload', formData).then(response => console.log(response));
 }
