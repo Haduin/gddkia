@@ -21,7 +21,7 @@ const App = () => {
   });
 
   useEffect(() => {
-    if(userData.email!==''){
+    if (userData.email !== '') {
       handleLogin();
     }
   }, [userData]);
@@ -34,7 +34,6 @@ const App = () => {
 
       if (new Date().getTime() < tokenExp) {
         setIsAuthenticated(true);
-
       } else if (new Date().getTime() > tokenExp) {
         setIsAuthenticated(false);
         localStorage.clear();
@@ -46,29 +45,23 @@ const App = () => {
         config.headers['Access-Control-Allow-Origin'] = '*';
         return config;
       });
-
     }
-
   }, []);
 
   const handleLogin = () => {
-    console.log(userData);
     const data = {
       'username': userData.email,
       'password': userData.password
     };
     axios.post(`${config.backend}/login`, data)
       .then(response => {
-        console.log(response);
         localStorage.setItem('token', response.data);
         setIsAuthenticated(true);
         window.location.reload(true);
       })
       .catch(error => {
         console.log(error);
-
       });
-
   };
 
   return (

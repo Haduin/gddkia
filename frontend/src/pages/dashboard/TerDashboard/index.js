@@ -7,7 +7,7 @@ const Index = () => {
   return (
     <Grid>
       <MainCard>
-        <TerDashboard/>
+        <TerDashboard />
       </MainCard>
     </Grid>
   );
