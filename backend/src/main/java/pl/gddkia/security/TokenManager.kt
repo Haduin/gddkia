@@ -1,11 +1,15 @@
 package pl.gddkia.security
 
 import io.jsonwebtoken.Claims
+import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Component
+import pl.gddkia.estimate.EstimateServiceImpl
 import java.io.Serializable
 import java.security.Key
 import java.util.*
@@ -14,10 +18,13 @@ import kotlin.reflect.KFunction1
 
 @Component
 class TokenManager : Serializable {
+    private val LOGGER: Logger = LogManager.getLogger(
+        TokenManager::class.java
+    )
     private val TOKEN_VALIDITY: Long = 1000 * 60 * 5
 
     @Value("\${security.secret}")
-    private val SECRET: String = "357638792F423F4428472B4B6250655368566D597133743677397A2443264629"
+    private val SECRET: String = ""
 
     fun validateToken(token: String, userDetails: UserDetails?): Boolean {
         val username = extractUsername(token)
@@ -43,11 +50,17 @@ class TokenManager : Serializable {
     }
 
     private fun extractAllClaims(token: String): Claims {
-        return Jwts.parserBuilder()
-            .setSigningKey(getSignKey())
-            .build()
-            .parseClaimsJws(token)
-            .body
+        return try {
+            Jwts.parserBuilder()
+                .setSigningKey(getSignKey())
+                .build()
+                .parseClaimsJws(token)
+                .body
+        } catch (e: ExpiredJwtException) {
+            LOGGER.info("Token wygasł dla ${e.claims}")
+            throw ExpiredJwtException(e.header,e.claims,e.message)
+        }
+
     }
 
     private fun isTokenActive(token: String): Boolean {

@@ -2,7 +2,6 @@
   "name": "gddkia-example",
   "version": "0.0.1",
   "private": true,
-  "proxy": "http://localhost:8080",
   "homepage": "",
   "dependencies": {
     "@ant-design/colors": "^6.0.0",

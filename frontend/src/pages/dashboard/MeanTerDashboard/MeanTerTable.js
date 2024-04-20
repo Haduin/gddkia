@@ -40,7 +40,7 @@ function Table() {
   };
 
   useEffect(() => {
-    axios.get(config.backend + '/jobs')
+    axios.get(`${config.backend}/jobs`)
       .then(response => {
         setRows(response.data.map((obj, index) =>
           (

@@ -17,6 +17,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.servlet.config.annotation.CorsRegistry
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import java.util.*
 
 
@@ -32,7 +35,14 @@ class SecurityConfig(
     @Throws(Exception::class)
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         return http
-            .cors { obj -> obj.disable() }
+            .cors { obj -> obj.configurationSource {
+                val corsConfiguration = CorsConfiguration()
+                corsConfiguration.allowedOrigins = listOf("http://localhost:3000")
+                corsConfiguration.allowedMethods = listOf("GET", "POST", "PUT", "DELETE")
+                corsConfiguration.allowCredentials = true
+                corsConfiguration.applyPermitDefaultValues()
+                corsConfiguration
+            } }
             .csrf { obj -> obj.disable() }
             .authorizeHttpRequests { req ->
                 req.requestMatchers("/login").permitAll()

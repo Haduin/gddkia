@@ -28,6 +28,9 @@ const App = () => {
   useEffect(() => {
     if (localStorage.getItem('token') != null) {
       const token = localStorage.getItem('token');
+      if(token === 'undefined'){
+        localStorage.clear()
+      }
       const tokenData = JSON.parse(window.atob(token.split('.')[1]));
       const tokenExp = parseInt(tokenData.exp + '000');
 
@@ -36,6 +39,7 @@ const App = () => {
       } else if (new Date().getTime() > tokenExp) {
         updatePartialState(setUserData, { isAuthenticated : false })
         localStorage.clear();
+        window.location.reload(true);
         redirect('/');
       }
       axios.interceptors.request.use((config) => {

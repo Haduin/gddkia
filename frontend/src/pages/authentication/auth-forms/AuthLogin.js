@@ -30,7 +30,7 @@ import { useNavigate } from 'react-router-dom';
 // ============================|| FIREBASE - LOGIN ||============================ //
 
 const AuthLogin = () => {
-  const nav = useNavigate()
+  const nav = useNavigate();
   // const [checked, setChecked] = React.useState(false);
   const { setUserData } = useContext(UserContext);
   const [showPassword, setShowPassword] = React.useState(false);
@@ -53,7 +53,7 @@ const AuthLogin = () => {
           localStorage.setItem('token', response.data.token);
           updatePartialState(setUserData, { isAuthenticated: true });
           window.location.reload(true);
-          nav("/")
+          nav('/');
         }
       })
       .catch(error => {

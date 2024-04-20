@@ -9,7 +9,7 @@ const config = {
   mode: 'light',
   presetColor: 'default',
   themeDirection: 'ltr',
-  backend:''
+  backend:'http://localhost:8080'
 };
 
 export default config;

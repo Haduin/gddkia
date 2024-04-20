@@ -15,7 +15,7 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(InvalidCredentials.class)
     public ResponseEntity<ErrorDetails> handleInvalidCredencialsException(InvalidCredentials e) {
-        return new ResponseEntity<>(new ErrorDetails(e.getMessage()), HttpStatus.OK);
+        return new ResponseEntity<>(new ErrorDetails(e.getMessage()), HttpStatus.NOT_FOUND);
     }
     @ExceptionHandler(InternalAuthenticationServiceException.class)
     public ResponseEntity<ErrorDetails> handleInternalAuthenticationServiceExceptionsException(InternalAuthenticationServiceException e) {

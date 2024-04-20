@@ -1,4 +1,5 @@
 import axios from 'axios';
+import config from '../../../config';
 
 export const sendNewTer = (file, companyName, contractNumber, regionName, branchName) => {
   const formData = new FormData();
@@ -9,5 +10,5 @@ export const sendNewTer = (file, companyName, contractNumber, regionName, branch
   formData.append('dateTo', '10/10/2022');
   formData.append('regionName', regionName);
   formData.append('branchName', branchName);
-  return axios.post('/estimate/upload', formData)
+  return axios.post(`${config.backend}/estimate/upload`, formData)
 }

@@ -2,6 +2,7 @@ package pl.gddkia.security
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.context.annotation.Bean
 import org.springframework.context.event.EventListener
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.authentication.event.AbstractAuthenticationFailureEvent
@@ -17,7 +18,7 @@ class AuthenticationEvents {
 
     @EventListener
     fun onSuccess(success: AuthenticationSuccessEvent?) {
-        logger.info("Zalogowano sie")
+        logger.info("Zalogowano sie ${(success?.source as UsernamePasswordAuthenticationToken).principal}")
     }
 
     @EventListener
@@ -25,4 +26,5 @@ class AuthenticationEvents {
         logger.info("Nie udało sie zalogować użytkownikowi: ${(failures.source as UsernamePasswordAuthenticationToken).principal}")
         throw InvalidCredentials("Niepoprawne dane")
     }
+
 }

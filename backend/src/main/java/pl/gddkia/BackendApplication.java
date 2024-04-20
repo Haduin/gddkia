@@ -29,6 +29,6 @@ public class BackendApplication implements ApplicationRunner {
         branchRepository.save(branch);
         Region Siedlce = new Region(null, "Siedlce", branch, null);
         regionRepository.save(Siedlce);
-        entityAuthUserRepository.save(new EntityAuthUser(1L, "kubachodan@wp.pl", "$2a$12$/6wOhkZScK/4el54TuWrguE/l.C2YLPp.tRJuLujhPp.b9XG0P/2q"));
+        entityAuthUserRepository.save(new EntityAuthUser(1L, "malgo@wp.pl", "$2a$12$/6wOhkZScK/4el54TuWrguE/l.C2YLPp.tRJuLujhPp.b9XG0P/2q"));
     }
 }

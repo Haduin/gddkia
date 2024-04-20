@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin
 @RequestMapping("/estimate")
 public class EstimateController {
     private final EstimateService estimateService;
@@ -37,7 +38,7 @@ public class EstimateController {
 
 
     @GetMapping()
-    public List<EstimateRest> getAllEstimate(){
+    public List<EstimateRest> getAllEstimate() {
         return estimateService.getEstimate();
     }
 }
