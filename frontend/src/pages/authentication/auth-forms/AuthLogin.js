@@ -22,12 +22,17 @@ import AnimateButton from 'components/@extended/AnimateButton';
 // assets
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
 import { UserContext } from '../../../App';
+import axios from 'axios';
+import config from '../../../config';
+import { updatePartialState } from '../../../commons';
+import { useNavigate } from 'react-router-dom';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
 const AuthLogin = () => {
+  const nav = useNavigate()
   // const [checked, setChecked] = React.useState(false);
-  const { userData, setUserData } = useContext(UserContext);
+  const { setUserData } = useContext(UserContext);
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -35,6 +40,25 @@ const AuthLogin = () => {
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
+  };
+
+  const handleLogin = ({ email, password }) => {
+    const data = {
+      'username': email,
+      'password': password
+    };
+    axios.post(`${config.backend}/login`, data)
+      .then(response => {
+        if (response.status === 200) {
+          localStorage.setItem('token', response.data.token);
+          updatePartialState(setUserData, { isAuthenticated: true });
+          window.location.reload(true);
+          nav("/")
+        }
+      })
+      .catch(error => {
+        updatePartialState(setUserData, { error: { active: true, message: error.response.data.message } });
+      });
   };
 
   return (
@@ -53,7 +77,7 @@ const AuthLogin = () => {
           try {
             setStatus({ success: false });
             setSubmitting(false);
-            setUserData({ email: values.email, password: values.password });
+            handleLogin({ email: values.email, password: values.password });
           } catch (err) {
             setStatus({ success: false });
             setErrors({ submit: err.message });

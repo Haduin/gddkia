@@ -10,9 +10,10 @@ import org.springframework.stereotype.Service
 class JwtUserDetailsService(
     private val entityAuthUserRepository: EntityAuthUserRepository
 ) : UserDetailsService {
+
     override fun loadUserByUsername(username: String?): MyUser? {
         val user = entityAuthUserRepository.findMyUserByUsername(username)
-            .orElseThrow()
+            .orElseThrow() //todo fix me
         return MyUser(user.username, user.password, listOf(SimpleGrantedAuthority("USER")))
     }
 

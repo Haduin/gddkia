@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import pl.gddkia.exceptions.MainError;
+import pl.gddkia.exceptions.MainResponse;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,7 +16,7 @@ public class EstimateController {
     private final EstimateService estimateService;
 
     @PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public MainError addNewEstimate(
+    public MainResponse addNewEstimate(
             @RequestPart MultipartFile file,
             @RequestParam("companyName") String companyName,
             @RequestParam("contractName") String contractName,

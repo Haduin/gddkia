@@ -15,12 +15,13 @@ const Item = styled('div')(({ theme, border = false }) => ({
 }));
 
 const TerDashboard = () => {
-  const { control, register, formState: { errors }, handleSubmit } = useForm({
+
+  const { control, register, formState: { errors }, handleSubmit, reset } = useForm({
     defaultValues: {
       companyName: '',
       contractNumber: '',
-      regionName: '',
-      branchName: '',
+      regionName: 'Siedlce',
+      branchName: 'Warszawa',
       // startDate: '',
       // endDate: '',
       file: ''
@@ -28,7 +29,15 @@ const TerDashboard = () => {
   });
 
   const onSubmit = (data) => {
-    sendNewTer(data.file[0], data.companyName, data.contractNumber, data.regionName, data.branchName);
+    sendNewTer(data.file[0], data.companyName, data.contractNumber, data.regionName, data.branchName)
+      .then(response => {
+        if (response.status === 200) {
+          alert('Poprawnie dodano formularz');
+        } else {
+          alert('Błąd formularza, spróbuj ponownie');
+        }
+        reset()
+      });
   };
 
 
@@ -79,6 +88,7 @@ const TerDashboard = () => {
                     <TextField
                       {...field}
                       placeholder="Region"
+                      disabled={true}
                       error={!!fieldState.error}
                       helperText={fieldState.error ? fieldState.error.message : null}
                     />
@@ -94,6 +104,7 @@ const TerDashboard = () => {
                     <TextField
                       {...field}
                       placeholder="Oddział"
+                      disabled={true}
                       error={!!fieldState.error}
                       helperText={fieldState.error ? fieldState.error.message : null}
                     />

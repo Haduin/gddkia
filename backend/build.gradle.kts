@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "pl.gddkia"
-version = "0.0.1-SNAPSHOT"
+version = "0.1"
 var jwtVersion = "0.11.5"
 
 java {

@@ -1,5 +1,5 @@
 // material-ui
-import { useMediaQuery, Container, Link, Typography, Stack } from '@mui/material';
+import { Container, Link, Stack, Typography, useMediaQuery } from '@mui/material';
 
 // ==============================|| FOOTER - AUTHENTICATION ||============================== //
 
@@ -16,12 +16,16 @@ const AuthFooter = () => {
       >
         <Typography variant="subtitle2" color="secondary" component="span">
           &copy; Dashboard Template&nbsp;
-          <Typography component={Link} variant="subtitle2" href="https://www.gov.pl/web/gddkia/generalna-dyrekcja-drog-krajowych-i-autostrad" target="_blank" underline="hover">
+          <Typography component={Link} variant="subtitle2"
+                      href="https://www.gov.pl/web/gddkia/generalna-dyrekcja-drog-krajowych-i-autostrad" target="_blank"
+                      underline="hover">
             Gddkia
           </Typography>
         </Typography>
 
-        <Stack direction={matchDownSM ? 'column' : 'row'} spacing={matchDownSM ? 1 : 3} textAlign={matchDownSM ? 'center' : 'inherit'}>
+        <Stack direction={matchDownSM ? 'column' : 'row'} spacing={matchDownSM ? 1 : 3}
+               textAlign={matchDownSM ? 'center' : 'inherit'}>
+
           {/*<Typography*/}
           {/*  variant="subtitle2"*/}
           {/*  color="secondary"*/}

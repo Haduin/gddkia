@@ -8,36 +8,34 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import Login from './pages/authentication/Login';
 import axios from 'axios';
 import { redirect } from 'react-router-dom';
-import config from './config';
-// ==============================|| APP - THEME, ROUTER, LOCAL  ||============================== //
+import { updatePartialState } from './commons';
 
 
 export const UserContext = createContext(null);
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userData, setUserData] = useState({
-    email: '',
-    password: ''
+    isAuthenticated: false,
+    error: {
+      active: false,
+      message: ''
+    }
   });
 
   useEffect(() => {
-    if (userData.email !== '') {
-      handleLogin();
-    }
+    console.log(userData);
   }, [userData]);
 
   useEffect(() => {
     if (localStorage.getItem('token') != null) {
       const token = localStorage.getItem('token');
-      var tokenData = JSON.parse(window.atob(token.split('.')[1]));
-      var tokenExp = parseInt(tokenData.exp + '000');
+      const tokenData = JSON.parse(window.atob(token.split('.')[1]));
+      const tokenExp = parseInt(tokenData.exp + '000');
 
       if (new Date().getTime() < tokenExp) {
-        setIsAuthenticated(true);
+        updatePartialState(setUserData, { isAuthenticated : true })
       } else if (new Date().getTime() > tokenExp) {
-        setIsAuthenticated(false);
+        updatePartialState(setUserData, { isAuthenticated : false })
         localStorage.clear();
-        window.location.reload(true);
         redirect('/');
       }
       axios.interceptors.request.use((config) => {
@@ -48,28 +46,13 @@ const App = () => {
     }
   }, []);
 
-  const handleLogin = () => {
-    const data = {
-      'username': userData.email,
-      'password': userData.password
-    };
-    axios.post(`${config.backend}/login`, data)
-      .then(response => {
-        localStorage.setItem('token', response.data);
-        setIsAuthenticated(true);
-        window.location.reload(true);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
 
   return (
     <ThemeCustomization>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <UserContext.Provider value={{ userData, setUserData }}>
           <ScrollTop>
-            {isAuthenticated ? <Routes /> : <Login />}
+            {userData.isAuthenticated ? <Routes /> : <Login />}
           </ScrollTop>
         </UserContext.Provider>
       </LocalizationProvider>

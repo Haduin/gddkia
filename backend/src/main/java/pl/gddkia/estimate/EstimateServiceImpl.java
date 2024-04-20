@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.stereotype.Service;
 import pl.gddkia.branch.BranchRepository;
-import pl.gddkia.exceptions.MainError;
+import pl.gddkia.exceptions.MainResponse;
 import pl.gddkia.exceptions.RegionNotFoundException;
 import pl.gddkia.group.GROUP_NAME;
 import pl.gddkia.group.Group;
@@ -43,7 +43,7 @@ public class EstimateServiceImpl implements EstimateService {
 
     @Transactional
     @Override
-    public MainError addNewEstimate(final AddNewEstimateRest rest, final InputStream inputStream) throws IOException {
+    public MainResponse addNewEstimate(final AddNewEstimateRest rest, final InputStream inputStream) throws IOException {
         LOGGER.info("Start saving data from file");
         /*
             TODO add inputStream file validation
@@ -112,7 +112,7 @@ public class EstimateServiceImpl implements EstimateService {
         }
         workbook.close();
         LOGGER.info("End of data");
-        return new MainError.A("OK");
+        return new MainResponse.EstimateSuccessful("OK");
     }
 
     //TODO change to predicate validator or sth better
