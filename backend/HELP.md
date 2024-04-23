@@ -4,12 +4,9 @@
 
 
 ### Build new docker image
-* run ./gradlew clean 
-* run ./gradlew bootJar
+* ./gradlew clean bootJar
 * docker build -t haduin/gddkia-backend .
 * docker push haduin/gddkia-backend
-
-
 
 
 ### Useful links for feature development

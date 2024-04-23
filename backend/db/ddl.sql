@@ -33,7 +33,7 @@ create table group_table
     group_name  varchar(255)
 );
 
-create table job
+create table jobs
 (
     cost_estimate double precision default 1,
     quantity      double precision,

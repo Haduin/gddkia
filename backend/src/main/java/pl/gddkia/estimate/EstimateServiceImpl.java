@@ -13,7 +13,7 @@ import pl.gddkia.exceptions.RegionNotFoundException;
 import pl.gddkia.group.GROUP_NAME;
 import pl.gddkia.group.Group;
 import pl.gddkia.group.GroupRepository;
-import pl.gddkia.job.Job;
+import pl.gddkia.job.Jobs;
 import pl.gddkia.job.JobRepository;
 import pl.gddkia.job.JobRest;
 import pl.gddkia.region.Region;
@@ -63,7 +63,7 @@ public class EstimateServiceImpl implements EstimateService {
 
         for (int sheetIndex = 0; sheetIndex < workbook.getNumberOfSheets() && sheetIndex <= 8; sheetIndex++) {
             Sheet sheetAt = workbook.getSheetAt(sheetIndex);
-            List<Job> jobList = new ArrayList<>();
+            List<Jobs> jobsList = new ArrayList<>();
             Group group = new Group(null, GROUP_NAME.findByValue(sheetIndex + 1).name(), null, estimate);
             groupRepository.save(group);
             boolean skipRows = true;
@@ -94,8 +94,8 @@ public class EstimateServiceImpl implements EstimateService {
                         sst = row.getCell(2).toString();
                     }
 
-                    jobList.add(
-                            new Job(
+                    jobsList.add(
+                            new Jobs(
                                     null,
                                     sst,
                                     row.getCell(3).toString(),
@@ -108,7 +108,7 @@ public class EstimateServiceImpl implements EstimateService {
                     );
                 }
             }
-            jobRepository.saveAll(jobList);
+            jobRepository.saveAll(jobsList);
         }
         workbook.close();
         LOGGER.info("End of data");
@@ -154,13 +154,13 @@ public class EstimateServiceImpl implements EstimateService {
                                 .collect(
                                         Collectors.toMap(
                                                 Group::getGroupName,
-                                                group -> group.getJobs().stream().map(job -> new JobRest(
-                                                        job.getSST(),
-                                                        job.getDescription(),
-                                                        job.getUnit(),
-                                                        job.getCostEstimate(),
-                                                        job.getQuantity(),
-                                                        job.getSubType()
+                                                group -> group.getJobs().stream().map(jobs -> new JobRest(
+                                                        jobs.getSST(),
+                                                        jobs.getDescription(),
+                                                        jobs.getUnit(),
+                                                        jobs.getCostEstimate(),
+                                                        jobs.getQuantity(),
+                                                        jobs.getSubType()
                                                 )).toList()
                                         )
                                 )

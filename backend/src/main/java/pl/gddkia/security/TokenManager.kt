@@ -21,7 +21,7 @@ class TokenManager : Serializable {
     private val LOGGER: Logger = LogManager.getLogger(
         TokenManager::class.java
     )
-    private val TOKEN_VALIDITY: Long = 1000 * 60 * 5
+    private val TOKEN_VALIDITY: Long = 1000 * 60 * 1
 
     @Value("\${security.secret}")
     private val SECRET: String = ""
@@ -50,16 +50,11 @@ class TokenManager : Serializable {
     }
 
     private fun extractAllClaims(token: String): Claims {
-        return try {
-            Jwts.parserBuilder()
-                .setSigningKey(getSignKey())
-                .build()
-                .parseClaimsJws(token)
-                .body
-        } catch (e: ExpiredJwtException) {
-            LOGGER.info("Token wygasł dla ${e.claims}")
-            throw ExpiredJwtException(e.header,e.claims,e.message)
-        }
+        return Jwts.parserBuilder()
+            .setSigningKey(getSignKey())
+            .build()
+            .parseClaimsJws(token)
+            .body
 
     }
 

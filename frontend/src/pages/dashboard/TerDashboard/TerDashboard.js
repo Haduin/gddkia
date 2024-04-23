@@ -29,7 +29,6 @@ const TerDashboard = () => {
   });
 
   const onSubmit = (data) => {
-    console.log(data)
     sendNewTer(data.file[0], data.companyName, data.contractNumber, data.regionName, data.branchName)
       .then(response => {
         if (response.status === 200) {

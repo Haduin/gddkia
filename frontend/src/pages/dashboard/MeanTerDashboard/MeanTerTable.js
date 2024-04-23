@@ -1,12 +1,12 @@
 import { DataGrid } from '@mui/x-data-grid';
-import axios from 'axios';
 // material-ui
 import { Box, Grid, TableContainer, TextField } from '@mui/material';
 
 // third-party
 // project import
 import { useEffect, useState } from 'react';
-import config from '../../../config';
+import { fetchJobs } from './actions';
+import { handleLogout } from '../../../commons';
 
 const columns = [
   { field: 'sst', headerName: 'SST', width: 120 },
@@ -24,6 +24,7 @@ function Table() {
   const [rows, setRows] = useState([]);
   const [filterText, setFilterText] = useState('');
   const [filteredRows, setFilteredRows] = useState(rows);
+
   const handleFilterChange = (event) => {
     const value = event.target.value.toLowerCase();
     setFilterText(value);
@@ -40,7 +41,7 @@ function Table() {
   };
 
   useEffect(() => {
-    axios.get(`${config.backend}/jobs`)
+    fetchJobs()
       .then(response => {
         setRows(response.data.map((obj, index) =>
           (
@@ -53,7 +54,10 @@ function Table() {
             }
           )
         ));
-      });
+      }).catch(err => {
+      if (err.response.status === 403)
+        handleLogout();
+    });
   }, []);
 
   useEffect(() => {
@@ -102,20 +106,21 @@ Table.propTypes = {};
 export default function MeanTerTable() {
 
   return (
-    <Box>
-
-      <TableContainer
-        sx={{
-          width: '100%',
-          overflowX: 'auto',
-          position: 'relative',
-          display: 'block',
-          maxWidth: '100%',
-          '& td, & th': { whiteSpace: 'nowrap' }
-        }}
-      >
-        <Table />
-      </TableContainer>
+    <Box justifyContent="center" alignItems="center">
+      <Grid>
+        <TableContainer
+          sx={{
+            width: '100%',
+            overflowX: 'auto',
+            position: 'relative',
+            display: 'block',
+            maxWidth: '100%',
+            '& td, & th': { whiteSpace: 'nowrap' }
+          }}
+        >
+          <Table />
+        </TableContainer>
+      </Grid>
     </Box>
   );
 }

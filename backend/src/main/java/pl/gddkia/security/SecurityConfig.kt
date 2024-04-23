@@ -1,6 +1,7 @@
 package pl.gddkia.security
 
 import lombok.RequiredArgsConstructor
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -18,8 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.cors.CorsConfiguration
-import org.springframework.web.servlet.config.annotation.CorsRegistry
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 import java.util.*
 
 
@@ -31,18 +30,23 @@ class SecurityConfig(
     private val jwtUserDetailsService: JwtUserDetailsService
 ) {
 
+    @Value("\${security.front_url}")
+    val frontUri: String = ""
+
     @Bean
     @Throws(Exception::class)
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         return http
-            .cors { obj -> obj.configurationSource {
-                val corsConfiguration = CorsConfiguration()
-                corsConfiguration.allowedOrigins = listOf("http://localhost:3000")
-                corsConfiguration.allowedMethods = listOf("GET", "POST", "PUT", "DELETE")
-                corsConfiguration.allowCredentials = true
-                corsConfiguration.applyPermitDefaultValues()
-                corsConfiguration
-            } }
+            .cors { obj ->
+                obj.configurationSource {
+                    val corsConfiguration = CorsConfiguration()
+                    corsConfiguration.allowedOrigins = listOf(frontUri)
+                    corsConfiguration.allowedMethods = listOf("GET", "POST", "PUT", "DELETE")
+                    corsConfiguration.allowCredentials = true
+                    corsConfiguration.applyPermitDefaultValues()
+                    corsConfiguration
+                }
+            }
             .csrf { obj -> obj.disable() }
             .authorizeHttpRequests { req ->
                 req.requestMatchers("/login").permitAll()
