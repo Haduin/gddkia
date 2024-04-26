@@ -34,7 +34,6 @@ class SecurityConfig(
     val frontUri: String = ""
 
     @Bean
-    @Throws(Exception::class)
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         return http
             .cors { obj ->

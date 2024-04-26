@@ -9,7 +9,6 @@ import org.apache.logging.log4j.Logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Component
-import pl.gddkia.estimate.EstimateServiceImpl
 import java.io.Serializable
 import java.security.Key
 import java.util.*
@@ -18,10 +17,7 @@ import kotlin.reflect.KFunction1
 
 @Component
 class TokenManager : Serializable {
-    private val LOGGER: Logger = LogManager.getLogger(
-        TokenManager::class.java
-    )
-    private val TOKEN_VALIDITY: Long = 1000 * 60 * 1
+    private val TOKEN_VALIDITY: Long = 1000 * 60 * 60
 
     @Value("\${security.secret}")
     private val SECRET: String = ""

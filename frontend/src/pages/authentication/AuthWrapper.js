@@ -19,7 +19,7 @@ const AuthWrapper = ({ children }) => {
 
   const closeErrorAlert = () => {
     updatePartialState(setUserData, { error: { active: false, message: '' } });
-  }
+  };
 
   return (
     <Box sx={{ minHeight: '100vh' }}>

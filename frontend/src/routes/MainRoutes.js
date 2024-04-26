@@ -7,6 +7,8 @@ import MainLayout from 'layout/MainLayout';
 // render - dashboard
 const MeanTerDashboard = Loadable(lazy(() => import('pages/dashboard/MeanTerDashboard')));
 const Ter = Loadable(lazy(() => import('pages/dashboard/TerDashboard')));
+const SamplePage = Loadable(lazy(() => import('pages/extra-pages/SamplePage')));
+
 
 
 // ==============================|| MAIN ROUTING ||============================== //
@@ -22,6 +24,10 @@ const MainRoutes = {
     {
       path: '/ter/srednie',
       element: <MeanTerDashboard />
+    },
+    {
+      path: 'sample',
+      element: <SamplePage />
     }
   ]
 };
