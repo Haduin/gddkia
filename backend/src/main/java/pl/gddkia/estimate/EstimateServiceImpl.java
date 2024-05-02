@@ -143,29 +143,34 @@ public class EstimateServiceImpl implements EstimateService {
         return estimateRepository.findAll()
                 .stream()
                 .map(estimate -> new EstimateRest(
-                        estimate.getId(),
-                        estimate.getContractName(),
-                        estimate.getDateFrom().toString(),
-                        estimate.getDateTo().toString(),
-                        estimate.getRegion().getRegionName(),
-                        estimate.getRegion().getBranch().getBranchName(),
-                        groupRepository.findAllByEstimateId(estimate.getId())
-                                .stream()
-                                .collect(
-                                        Collectors.toMap(
-                                                Group::getGroupName,
-                                                group -> group.getJobs().stream().map(jobs -> new JobRest(
-                                                        jobs.getSST(),
-                                                        jobs.getDescription(),
-                                                        jobs.getUnit(),
-                                                        jobs.getCostEstimate(),
-                                                        jobs.getQuantity(),
-                                                        jobs.getSubType()
-                                                )).toList()
+                                estimate.getId(),
+                                estimate.getContractName(),
+                                estimate.getDateFrom().toString(),
+                                estimate.getDateTo().toString(),
+                                estimate.getRegion().getRegionName(),
+                                estimate.getRegion().getBranch().getBranchName(),
+                                groupRepository.findAllByEstimateId(estimate.getId())
+                                        .stream()
+                                        .collect(
+                                                Collectors.toMap(
+                                                        Group::getGroupName,
+                                                        group -> group
+                                                                .getJobs()
+                                                                .stream()
+                                                                .map(jobs -> new JobRest(
+                                                                                jobs.getSST(),
+                                                                                jobs.getDescription(),
+                                                                                jobs.getUnit(),
+                                                                                jobs.getCostEstimate(),
+                                                                                jobs.getQuantity(),
+                                                                                jobs.getSubType()
+                                                                        )
+                                                                ).toList()
+                                                )
                                         )
-                                )
 
-                )).toList();
+                        )
+                ).toList();
     }
 
     @Override

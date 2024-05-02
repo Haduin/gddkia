@@ -9,6 +9,6 @@ export const updatePartialState = (setState, partialState) => {
 
 export const handleLogout = () => {
   localStorage.clear();
-  window.location.reload(true);
+  window.location.reload();
   redirect('/');
 };
