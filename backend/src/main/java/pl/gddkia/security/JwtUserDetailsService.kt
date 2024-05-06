@@ -14,7 +14,7 @@ class JwtUserDetailsService(
 ) : UserDetailsService {
     var LOGGER  = LoggerFactory.getLogger(JwtUserDetailsService::class.java)
 
-    override fun loadUserByUsername(username: String?): MyUser? {
+    override fun loadUserByUsername(username: String?): MyUser {
         val user = entityAuthUserRepository.findMyUserByUsername(username)
             .orElseThrow {
                 LOGGER.info("Nie znaleziono użytkownika ${username}")

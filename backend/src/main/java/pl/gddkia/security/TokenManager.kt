@@ -1,29 +1,27 @@
 package pl.gddkia.security
 
 import io.jsonwebtoken.Claims
-import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.SignatureAlgorithm.HS256
 import io.jsonwebtoken.security.Keys
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Component
 import java.io.Serializable
 import java.security.Key
+import java.time.Duration
 import java.util.*
 import kotlin.reflect.KFunction1
 
 
 @Component
 class TokenManager : Serializable {
-    private val TOKEN_VALIDITY: Long = 1000 * 60 * 60
+    private val TOKEN_VALIDITY: Duration = Duration.ofHours(1)
 
     @Value("\${security.secret}")
     private val SECRET: String = ""
 
     fun validateToken(token: String, userDetails: UserDetails?): Boolean {
-        val username = extractUsername(token)
         return isTokenActive(token)
     }
 
@@ -63,8 +61,8 @@ class TokenManager : Serializable {
             .setClaims(claims)
             .setSubject(username)
             .setIssuedAt(Date(System.currentTimeMillis()))
-            .setExpiration(Date(System.currentTimeMillis() + TOKEN_VALIDITY))
-            .signWith(getSignKey(), io.jsonwebtoken.SignatureAlgorithm.HS256)
+            .setExpiration(Date(System.currentTimeMillis().plus(TOKEN_VALIDITY.toMillis())))
+            .signWith(getSignKey(), HS256)
             .compact()
     }
 

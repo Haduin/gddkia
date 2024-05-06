@@ -1,6 +1,7 @@
 package pl.gddkia.exceptions;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -22,8 +23,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDetails> handle(InternalAuthenticationServiceException e) {
         return new ResponseEntity<>(new ErrorDetails(e.getMessage()), HttpStatus.OK);
     }
-    @ExceptionHandler(ExpiredJwtException.class)
-    public ResponseEntity<ErrorDetails> handle(ExpiredJwtException e) {
-        return new ResponseEntity<>(new ErrorDetails(e.getMessage()), HttpStatus.FORBIDDEN);
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<ErrorDetails> handle(JwtException e) {
+        return new ResponseEntity<>(new ErrorDetails(e.getMessage()), HttpStatus.UNAUTHORIZED);
     }
 }
