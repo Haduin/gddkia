@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.gddkia.estimate.Estimate;
-import pl.gddkia.job.Job;
+import pl.gddkia.job.Jobs;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class Group {
     private String groupName;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL)
-    private List<Job> jobs;
+    private List<Jobs> jobs;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "estimate_id")

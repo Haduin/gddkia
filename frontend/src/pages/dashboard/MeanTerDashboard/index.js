@@ -15,7 +15,7 @@ import MeanTerTable from './MeanTerTable';
 const MeanTerDashboard = () => {
 
   return (
-    <Grid container justifyContent="center" alignItems="center">
+    <Grid>
       <MainCard content={false}>
         <MeanTerTable />
       </MainCard>

@@ -16,7 +16,7 @@ const AuthCard = ({ children, ...other }) => (
       '& > *': {
         flexGrow: 1,
         flexBasis: '50%'
-      }
+      },
     }}
     content={false}
     {...other}

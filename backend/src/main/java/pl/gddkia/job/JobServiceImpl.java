@@ -30,12 +30,12 @@ public class JobServiceImpl implements JobService {
     }
 
     private AvgJobsDetails mapToAvgJobsDetails(Object[] result) {
-        AvgJobsDetails avgJobsDetails = new AvgJobsDetails();
-        avgJobsDetails.setDescription((String) result[0]);
-        avgJobsDetails.setSst((String) result[1]);
-        avgJobsDetails.setUnit((String) result[2]);
-        avgJobsDetails.setCostEstimate((Double) result[3]);
-        return avgJobsDetails;
+        return new AvgJobsDetails(
+                (String) result[0],
+                (String) result[1],
+                (String) result[2],
+                (Double) result[3]
+        );
     }
 
 

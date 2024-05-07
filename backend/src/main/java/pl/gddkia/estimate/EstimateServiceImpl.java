@@ -8,11 +8,12 @@ import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.*;
 import org.springframework.stereotype.Service;
 import pl.gddkia.branch.BranchRepository;
+import pl.gddkia.exceptions.MainResponse;
 import pl.gddkia.exceptions.RegionNotFoundException;
 import pl.gddkia.group.GROUP_NAME;
 import pl.gddkia.group.Group;
 import pl.gddkia.group.GroupRepository;
-import pl.gddkia.job.Job;
+import pl.gddkia.job.Jobs;
 import pl.gddkia.job.JobRepository;
 import pl.gddkia.job.JobRest;
 import pl.gddkia.region.Region;
@@ -42,7 +43,7 @@ public class EstimateServiceImpl implements EstimateService {
 
     @Transactional
     @Override
-    public void addNewEstimate(final AddNewEstimateRest rest, final InputStream inputStream) throws IOException {
+    public MainResponse addNewEstimate(final AddNewEstimateRest rest, final InputStream inputStream) throws IOException {
         LOGGER.info("Start saving data from file");
         /*
             TODO add inputStream file validation
@@ -62,7 +63,7 @@ public class EstimateServiceImpl implements EstimateService {
 
         for (int sheetIndex = 0; sheetIndex < workbook.getNumberOfSheets() && sheetIndex <= 8; sheetIndex++) {
             Sheet sheetAt = workbook.getSheetAt(sheetIndex);
-            List<Job> jobList = new ArrayList<>();
+            List<Jobs> jobsList = new ArrayList<>();
             Group group = new Group(null, GROUP_NAME.findByValue(sheetIndex + 1).name(), null, estimate);
             groupRepository.save(group);
             boolean skipRows = true;
@@ -93,8 +94,8 @@ public class EstimateServiceImpl implements EstimateService {
                         sst = row.getCell(2).toString();
                     }
 
-                    jobList.add(
-                            new Job(
+                    jobsList.add(
+                            new Jobs(
                                     null,
                                     sst,
                                     row.getCell(3).toString(),
@@ -107,15 +108,16 @@ public class EstimateServiceImpl implements EstimateService {
                     );
                 }
             }
-            jobRepository.saveAll(jobList);
+            jobRepository.saveAll(jobsList);
         }
         workbook.close();
         LOGGER.info("End of data");
+        return new MainResponse.EstimateSuccessful("OK");
     }
 
     //TODO change to predicate validator or sth better
     private Double validateUnitPrice(Cell cell) {
-        return cell.toString() != null &&
+        return cell != null &&
                 !cell.getCellType().name().isBlank() &&
                 !cell.toString().isEmpty() ?
                 parseStringCellValue(cell.toString()) : null;
@@ -141,29 +143,34 @@ public class EstimateServiceImpl implements EstimateService {
         return estimateRepository.findAll()
                 .stream()
                 .map(estimate -> new EstimateRest(
-                        estimate.getId(),
-                        estimate.getContractName(),
-                        estimate.getDateFrom().toString(),
-                        estimate.getDateTo().toString(),
-                        estimate.getRegion().getRegionName(),
-                        estimate.getRegion().getBranch().getBranchName(),
-                        groupRepository.findAllByEstimateId(estimate.getId())
-                                .stream()
-                                .collect(
-                                        Collectors.toMap(
-                                                Group::getGroupName,
-                                                group -> group.getJobs().stream().map(job -> new JobRest(
-                                                        job.getSST(),
-                                                        job.getDescription(),
-                                                        job.getUnit(),
-                                                        job.getCostEstimate(),
-                                                        job.getQuantity(),
-                                                        job.getSubType()
-                                                )).toList()
+                                estimate.getId(),
+                                estimate.getContractName(),
+                                estimate.getDateFrom().toString(),
+                                estimate.getDateTo().toString(),
+                                estimate.getRegion().getRegionName(),
+                                estimate.getRegion().getBranch().getBranchName(),
+                                groupRepository.findAllByEstimateId(estimate.getId())
+                                        .stream()
+                                        .collect(
+                                                Collectors.toMap(
+                                                        Group::getGroupName,
+                                                        group -> group
+                                                                .getJobs()
+                                                                .stream()
+                                                                .map(jobs -> new JobRest(
+                                                                                jobs.getSST(),
+                                                                                jobs.getDescription(),
+                                                                                jobs.getUnit(),
+                                                                                jobs.getCostEstimate(),
+                                                                                jobs.getQuantity(),
+                                                                                jobs.getSubType()
+                                                                        )
+                                                                ).toList()
+                                                )
                                         )
-                                )
 
-                )).toList();
+                        )
+                ).toList();
     }
 
     @Override

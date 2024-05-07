@@ -10,8 +10,8 @@ import pl.gddkia.group.Group;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Table(name = "job")
-public class Job {
+@Table(name = "jobs")
+public class Jobs {
 
     @Id
     @Column(name = "job_id")

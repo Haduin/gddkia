@@ -17,13 +17,13 @@ public class Region {
     @Id
     @Column(name = "region_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String regionName;
+    Long id;
+    String regionName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "branch_id")
-    private Branch branch;
+    Branch branch;
 
     @OneToMany(mappedBy = "region",cascade = CascadeType.ALL)
-    private List<Estimate> estimates;
+    List<Estimate> estimates;
 }

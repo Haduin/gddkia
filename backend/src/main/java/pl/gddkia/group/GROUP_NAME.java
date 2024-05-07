@@ -1,23 +1,17 @@
 package pl.gddkia.group;
 
 public enum GROUP_NAME {
-    NAWIERZCHNIA(1),
-    POBOCZA_PASY_ROZDZIALU(2),
-    KORPUS_DROGI(3),
-    ODWONIENIE(4),
-    CHODNIKI_SCIEZKI(5),
-    OZNAKOWANIE(6),
-    BRD(7),
-    ESTETYKA(8),
-    URZADZENIA_WSPOMAGAJACE(9),
-    ZARZADZENI_KONTRAKTEM(11),
-    CZYSTOSC_NA_OBIEKTACH(12);
-
-    private final int value;
-
-    GROUP_NAME(int value) {
-        this.value = value;
-    }
+    NAWIERZCHNIA,
+    POBOCZA_PASY_ROZDZIALU,
+    KORPUS_DROGI,
+    ODWONIENIE,
+    CHODNIKI_SCIEZKI,
+    OZNAKOWANIE,
+    BRD,
+    ESTETYKA,
+    URZADZENIA_WSPOMAGAJACE,
+    ZARZADZENI_KONTRAKTEM,
+    CZYSTOSC_NA_OBIEKTACH;
 
     public static GROUP_NAME findByValue(int value) {
         return switch (value) {

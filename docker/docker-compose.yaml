@@ -1,0 +1,31 @@
+# example config, required changes on remote server
+services:
+  postgres:
+    image: postgres:latest
+    container_name: my_postgres_db
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydb
+      PGUSER: postgres
+      user: postgres
+    ports:
+      - "61500:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+  backend:
+    image: haduin/gddkia-backend
+    container_name: backend
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./application.prod.yaml:/app/application.yaml
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/mydb
+      SPRING_DATASOURCE_USERNAME: myuser
+      SPRING_DATASOURCE_PASSWORD: mypassword
+
+volumes:
+  pg_data:

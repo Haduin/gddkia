@@ -1,21 +1,15 @@
-import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import React, { useContext } from 'react';
 
 // material-ui
 import {
   Button,
-  Checkbox,
-  Divider,
-  FormControlLabel,
   FormHelperText,
   Grid,
-  Link,
   IconButton,
   InputAdornment,
   InputLabel,
   OutlinedInput,
-  Stack,
-  Typography
+  Stack
 } from '@mui/material';
 
 // third party
@@ -23,17 +17,21 @@ import * as Yup from 'yup';
 import { Formik } from 'formik';
 
 // project import
-import FirebaseSocial from './FirebaseSocial';
 import AnimateButton from 'components/@extended/AnimateButton';
 
 // assets
-import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
+import { UserContext } from '../../../App';
+import { updatePartialState } from '../../../commons';
+import { useNavigate } from 'react-router-dom';
+import { handleLoginAction } from '../actions';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
 const AuthLogin = () => {
-  const [checked, setChecked] = React.useState(false);
-
+  const nav = useNavigate();
+  // const [checked, setChecked] = React.useState(false);
+  const { setUserData } = useContext(UserContext);
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -43,12 +41,31 @@ const AuthLogin = () => {
     event.preventDefault();
   };
 
+  const handleLogin = ({ email, password }) => {
+    const data = {
+      'username': email,
+      'password': password
+    };
+    handleLoginAction(data)
+      .then(response => {
+        if (response.status === 200) {
+          localStorage.setItem('token', response.data.token);
+          updatePartialState(setUserData, { isAuthenticated: true });
+          window.location.reload();
+          nav('/');
+        }
+      })
+      .catch(error => {
+        updatePartialState(setUserData, { error: { active: true, message: error.response.data.message } });
+      });
+  };
+
   return (
     <>
       <Formik
         initialValues={{
-          email: 'info@codedthemes.com',
-          password: '123456',
+          email: '',
+          password: '',
           submit: null
         }}
         validationSchema={Yup.object().shape({
@@ -59,6 +76,7 @@ const AuthLogin = () => {
           try {
             setStatus({ success: false });
             setSubmitting(false);
+            handleLogin({ email: values.email, password: values.password });
           } catch (err) {
             setStatus({ success: false });
             setErrors({ submit: err.message });
@@ -124,45 +142,13 @@ const AuthLogin = () => {
                   )}
                 </Stack>
               </Grid>
-
-              <Grid item xs={12} sx={{ mt: -1 }}>
-                <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={checked}
-                        onChange={(event) => setChecked(event.target.checked)}
-                        name="checked"
-                        color="primary"
-                        size="small"
-                      />
-                    }
-                    label={<Typography variant="h6">Keep me sign in</Typography>}
-                  />
-                  <Link variant="h6" component={RouterLink} to="" color="text.primary">
-                    Forgot Password?
-                  </Link>
-                </Stack>
-              </Grid>
-              {errors.submit && (
-                <Grid item xs={12}>
-                  <FormHelperText error>{errors.submit}</FormHelperText>
-                </Grid>
-              )}
               <Grid item xs={12}>
                 <AnimateButton>
-                  <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="primary">
+                  <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit"
+                          variant="contained" color="primary">
                     Login
                   </Button>
                 </AnimateButton>
-              </Grid>
-              <Grid item xs={12}>
-                <Divider>
-                  <Typography variant="caption"> Login with</Typography>
-                </Divider>
-              </Grid>
-              <Grid item xs={12}>
-                <FirebaseSocial />
               </Grid>
             </Grid>
           </form>
