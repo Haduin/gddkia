@@ -1,20 +1,12 @@
-package pl.gddkia.security;
+package pl.gddkia.security
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "USERS")
-public class EntityAuthUser {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    String username;
-    String password;
-}
+data class EntityAuthUser(
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long? = null,
+    var username: String? = null,
+    var password: String? = null,
+)

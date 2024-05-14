@@ -1,11 +1,11 @@
-package pl.gddkia.estimate;
+package pl.gddkia.estimate
 
-public record AddNewEstimateRest(
-        String companyName,
-        String contractName,
-        String dateFrom,
-        String dateTo,
-        String regionName,
-        String branchName
-) {
-}
+
+data class AddNewEstimateRest(
+    val companyName: String,
+    val contractName: String,
+    val dateFrom: String?,
+    val dateTo: String?,
+    val regionName: String,
+    val branchName: String
+)

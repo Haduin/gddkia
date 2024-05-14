@@ -1,9 +1,8 @@
-package pl.gddkia.security;
+package pl.gddkia.security
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaRepository
+import java.util.*
 
-import java.util.Optional;
-
-public interface EntityAuthUserRepository extends JpaRepository<EntityAuthUser, Long> {
-    Optional<EntityAuthUser> findMyUserByUsername(String username);
+interface EntityAuthUserRepository : JpaRepository<EntityAuthUser, Long> {
+    fun findMyUserByUsername(username: String?): Optional<EntityAuthUser>
 }

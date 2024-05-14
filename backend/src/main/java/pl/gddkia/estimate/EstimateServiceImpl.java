@@ -50,10 +50,10 @@ public class EstimateServiceImpl implements EstimateService {
             TODO repository objects finding saving
          */
         Workbook workbook = WorkbookFactory.create(inputStream);
-        Region regionOptional = regionRepository.findByRegionNameEquals(rest.regionName())
-                .orElseThrow(() -> new RegionNotFoundException(rest.regionName()));
+        Region regionOptional = regionRepository.findByRegionNameEquals(rest.getRegionName())
+                .orElseThrow(() -> new RegionNotFoundException(rest.getRegionName()));
 
-        Estimate estimate = new Estimate(null, rest.contractName(), convertStringToOffsetDateTime(rest.dateFrom()), convertStringToOffsetDateTime(rest.dateTo()), null, regionOptional);
+        Estimate estimate = new Estimate(null, rest.getContractName(), convertStringToOffsetDateTime(rest.getDateFrom()), convertStringToOffsetDateTime(rest.getDateTo()), null, regionOptional);
         regionOptional.getEstimates().add(estimate);
         estimateRepository.save(estimate);
 
