@@ -27,4 +27,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDetails> handle(JwtException e) {
         return new ResponseEntity<>(new ErrorDetails(e.getMessage()), HttpStatus.UNAUTHORIZED);
     }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorDetails> handle(Exception e) {
+        return new ResponseEntity<>(new ErrorDetails(e.getMessage()), HttpStatus.UNAUTHORIZED);
+    }
 }

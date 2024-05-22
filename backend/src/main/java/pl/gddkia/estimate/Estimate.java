@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.gddkia.group.Group;
-import pl.gddkia.region.Region;
+import pl.gddkia.branch.Branch;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -30,6 +30,6 @@ public class Estimate {
     private List<Group> groups;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "region_id")
-    private Region region;
+    @JoinColumn(name = "branch_id")
+    private Branch branch;
 }

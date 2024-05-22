@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
 // material-ui
 import {
@@ -21,17 +21,13 @@ import AnimateButton from 'components/@extended/AnimateButton';
 
 // assets
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
-import { UserContext } from '../../../App';
-import { updatePartialState } from '../../../commons';
-import { useNavigate } from 'react-router-dom';
-import { handleLoginAction } from '../actions';
+import { useAuthentication } from '../../../hooks/useAuthentication';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
 const AuthLogin = () => {
-  const nav = useNavigate();
+  const { handleLogin } = useAuthentication();
   // const [checked, setChecked] = React.useState(false);
-  const { setUserData } = useContext(UserContext);
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -41,24 +37,6 @@ const AuthLogin = () => {
     event.preventDefault();
   };
 
-  const handleLogin = ({ email, password }) => {
-    const data = {
-      'username': email,
-      'password': password
-    };
-    handleLoginAction(data)
-      .then(response => {
-        if (response.status === 200) {
-          localStorage.setItem('token', response.data.token);
-          updatePartialState(setUserData, { isAuthenticated: true });
-          window.location.reload();
-          nav('/');
-        }
-      })
-      .catch(error => {
-        updatePartialState(setUserData, { error: { active: true, message: error.response.data.message } });
-      });
-  };
 
   return (
     <>
@@ -76,7 +54,7 @@ const AuthLogin = () => {
           try {
             setStatus({ success: false });
             setSubmitting(false);
-            handleLogin({ email: values.email, password: values.password });
+            await handleLogin({ email: values.email, password: values.password });
           } catch (err) {
             setStatus({ success: false });
             setErrors({ submit: err.message });

@@ -6,19 +6,16 @@ import { Alert, Box, Button, Grid } from '@mui/material';
 // project import
 import AuthCard from './AuthCard';
 import AuthFooter from 'components/cards/AuthFooter';
-import { useContext } from 'react';
-import { UserContext } from '../../App';
-import { updatePartialState } from '../../commons';
+import { useAuthentication } from '../../hooks/useAuthentication';
 
 // assets
 
 // ==============================|| AUTHENTICATION - WRAPPER ||============================== //
 
 const AuthWrapper = ({ children }) => {
-  const { userData, setUserData } = useContext(UserContext);
-
+  const { error, setError } = useAuthentication();
   const closeErrorAlert = () => {
-    updatePartialState(setUserData, { error: { active: false, message: '' } });
+    setError({ active: false, message: '' });
   };
 
   return (
@@ -31,14 +28,14 @@ const AuthWrapper = ({ children }) => {
           minHeight: '100vh'
         }}
       >
-        {userData.error.active ? (
+        {error.active ? (
           <Grid container
                 justifyContent="center"
                 xs={12}
                 alignItems="center" item>
             <Alert variant="filled" severity="error"
                    action={<Button onClick={closeErrorAlert} color="primary" size="small">Zamknij </Button>}>
-              {userData.error.message}
+              {error.message}
             </Alert>
           </Grid>
         ) : <></>}

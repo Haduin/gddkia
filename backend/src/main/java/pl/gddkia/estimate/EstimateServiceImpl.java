@@ -6,8 +6,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.*;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
-import pl.gddkia.branch.BranchRepository;
 import pl.gddkia.exceptions.MainResponse;
 import pl.gddkia.exceptions.RegionNotFoundException;
 import pl.gddkia.group.GROUP_NAME;
@@ -16,8 +16,8 @@ import pl.gddkia.group.GroupRepository;
 import pl.gddkia.job.Jobs;
 import pl.gddkia.job.JobRepository;
 import pl.gddkia.job.JobRest;
-import pl.gddkia.region.Region;
-import pl.gddkia.region.RegionRepository;
+import pl.gddkia.branch.Branch;
+import pl.gddkia.branch.BranchRepository;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,7 +35,6 @@ public class EstimateServiceImpl implements EstimateService {
     private final GroupRepository groupRepository;
     private final EstimateRepository estimateRepository;
     private final BranchRepository branchRepository;
-    private final RegionRepository regionRepository;
 
 
     private final Logger LOGGER = LogManager.getLogger(EstimateServiceImpl.class);
@@ -43,21 +42,21 @@ public class EstimateServiceImpl implements EstimateService {
 
     @Transactional
     @Override
-    public MainResponse addNewEstimate(final AddNewEstimateRest rest, final InputStream inputStream) throws IOException {
+    public MainResponse addNewEstimate(@NotNull final AddNewEstimateRest rest, final InputStream inputStream) throws IOException {
         LOGGER.info("Start saving data from file");
         /*
             TODO add inputStream file validation
             TODO repository objects finding saving
          */
         Workbook workbook = WorkbookFactory.create(inputStream);
-        Region regionOptional = regionRepository.findByRegionNameEquals(rest.getRegionName())
+        Branch branchOptional = branchRepository.findBranchByBranchEquals(rest.getRegionName())
                 .orElseThrow(() -> new RegionNotFoundException(rest.getRegionName()));
 
-        Estimate estimate = new Estimate(null, rest.getContractName(), convertStringToOffsetDateTime(rest.getDateFrom()), convertStringToOffsetDateTime(rest.getDateTo()), null, regionOptional);
-        regionOptional.getEstimates().add(estimate);
+        Estimate estimate = new Estimate(null, rest.getContractName(), convertStringToOffsetDateTime(rest.getDateFrom()), convertStringToOffsetDateTime(rest.getDateTo()), null, branchOptional);
+        branchOptional.getEstimates().add(estimate);
         estimateRepository.save(estimate);
 
-        regionRepository.save(regionOptional);
+        branchRepository.save(branchOptional);
 
         String sst = "";
 
@@ -147,8 +146,7 @@ public class EstimateServiceImpl implements EstimateService {
                                 estimate.getContractName(),
                                 estimate.getDateFrom().toString(),
                                 estimate.getDateTo().toString(),
-                                estimate.getRegion().getRegionName(),
-                                estimate.getRegion().getBranch().getBranchName(),
+                                estimate.getBranch().getBranch(),
                                 groupRepository.findAllByEstimateId(estimate.getId())
                                         .stream()
                                         .collect(

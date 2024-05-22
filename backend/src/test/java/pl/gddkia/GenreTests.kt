@@ -12,9 +12,11 @@ import org.springframework.test.context.DynamicPropertySource
 import org.testcontainers.containers.GenericContainer
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Container
+import org.testcontainers.junit.jupiter.Testcontainers
 
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-abstract class GenreTests {
+
+@Testcontainers
+open class GenreTests {
     companion object {
         @Container
         val postgres: PostgreSQLContainer<*> = PostgreSQLContainer("postgres")
@@ -25,25 +27,25 @@ abstract class GenreTests {
                 withInitScript("sql/init.sql")
             }
 
-        @BeforeAll
-        @JvmStatic
-        fun startDBContainer() {
-            postgres.start()
-        }
-
-        @AfterAll
-        @JvmStatic
-        fun stopDBContainer() {
-            postgres.stop()
-        }
-
-//        @DynamicPropertySource
+//        @BeforeAll
 //        @JvmStatic
-//        fun registerDBContainer(registry: DynamicPropertyRegistry) {
-//            registry.add("spring.datasource.url", postgres::getJdbcUrl)
-//            registry.add("spring.datasource.url", postgres::getUsername)
-//            registry.add("spring.datasource.password", postgres::getPassword)
+//        fun startDBContainer() {
+//            postgres.start()
 //        }
+//
+//        @AfterAll
+//        @JvmStatic
+//        fun stopDBContainer() {
+//            postgres.stop()
+//        }
+
+        @DynamicPropertySource
+        @JvmStatic
+        fun registerDBContainer(registry: DynamicPropertyRegistry) {
+            registry.add("spring.datasource.url", postgres::getJdbcUrl)
+            registry.add("spring.datasource.username", postgres::getUsername)
+            registry.add("spring.datasource.password", postgres::getPassword)
+        }
 
     }
 

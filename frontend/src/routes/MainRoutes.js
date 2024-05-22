@@ -3,9 +3,11 @@ import { lazy } from 'react';
 // project import
 import Loadable from 'components/Loadable';
 import MainLayout from 'layout/MainLayout';
+import ErrorPage from './ErrorPage';
 
 // render - dashboard
 const MeanTerDashboard = Loadable(lazy(() => import('pages/dashboard/MeanTerDashboard')));
+const RegionDashboard = Loadable(lazy(() => import('pages/dashboard/RegionDetails')));
 const Ter = Loadable(lazy(() => import('pages/dashboard/TerDashboard')));
 const SamplePage = Loadable(lazy(() => import('pages/extra-pages/SamplePage')));
 
@@ -14,22 +16,28 @@ const SamplePage = Loadable(lazy(() => import('pages/extra-pages/SamplePage')));
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
-  path: '/',
+  path: '/app',
   element: <MainLayout />,
+  errorElement: <ErrorPage/>,
   children: [
     {
-      path: '/ter',
+      path: '/app/ter',
       element: <Ter />
     },
     {
-      path: '/ter/srednie',
+      path: '/app/ter/srednie',
       element: <MeanTerDashboard />
     },
     {
-      path: 'sample',
+      path: '/app/region',
+      element: <RegionDashboard />
+    },
+    {
+      path: '/app/sample',
       element: <SamplePage />
     }
-  ]
+  ],
+
 };
 
 export default MainRoutes;

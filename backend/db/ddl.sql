@@ -1,14 +1,6 @@
 create table branch
 (
-    branch_id   bigserial
-        primary key,
-    branch_name varchar(255)
-);
-
-create table region
-(
-    region_id   bigserial primary key,
-    branch_id   bigint references branch,
+    branch_id   bigserial primary key,
     region_name varchar(255)
 );
 
@@ -20,7 +12,7 @@ create table estimate
     estimate_id   bigserial
         primary key,
     region_id     bigint
-        references region,
+        references branch,
     contract_name varchar(255)
 );
 

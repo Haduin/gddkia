@@ -6,7 +6,4 @@ public sealed interface MainResponse {
 
     record UserLogged(String token) implements MainResponse {
     }
-
-    record C() implements MainResponse {
-    }
 }

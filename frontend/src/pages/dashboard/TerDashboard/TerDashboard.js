@@ -26,7 +26,7 @@ const TerDashboard = () => {
       file: ''
     }
   });
-
+console.log(errors)
   const onSubmit = (data) => {
     sendNewTer(data.file[0], data.companyName, data.contractNumber, data.regionName, data.branchName)
       .then(response => {
