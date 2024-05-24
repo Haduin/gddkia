@@ -2,42 +2,40 @@ import React, { useState } from 'react';
 import { Button, CircularProgress, Grid, TextField } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { sendNewTer } from './actions';
+import BranchSearch from '../../../components/BranchSearch';
 
-
-// const Item = styled('div')(({ theme, border = false }) => ({
-//   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-//   ...theme.typography.body2,
-//   padding: theme.spacing(1),
-//   textAlign: 'center',
-//   color: theme.palette.text.secondary,
-//   borderStyle: border ? 'solid' : 'none'
-// }));
 
 const TerDashboard = () => {
   const [loading, setLoading] = useState(false);
+  const [selectedBranch, setSelectedBranch] = useState('');
+  const [selectedRegion, setSelectedRegion] = useState('');
+  const [selectedSection, setSelectedSection] = useState('');
   const { control, register, formState: { errors }, handleSubmit, reset } = useForm({
     defaultValues: {
       companyName: '',
       contractNumber: '',
-      regionName: 'Siedlce',
-      branchName: 'Warszawa',
       // startDate: '',
       // endDate: '',
       file: ''
     }
   });
-console.log(errors)
+
   const onSubmit = (data) => {
-    sendNewTer(data.file[0], data.companyName, data.contractNumber, data.regionName, data.branchName)
+    sendNewTer(data.file[0], data.companyName, data.contractNumber, selectedBranch, selectedRegion, selectedSection)
       .then(response => {
         setLoading(true);
-        if (response.status === 200) {
-          alert('Poprawnie dodano formularz');
-        } else {
-          alert('Błąd formularza, spróbuj ponownie');
-        }
-        setLoading(false);
-        reset();
+        const timeout = setTimeout(() => {
+          if (response.status === 200) {
+            alert('Poprawnie dodano formularz');
+          } else {
+            alert('Błąd formularza, spróbuj ponownie');
+          }
+          setLoading(false);
+          reset();
+          setSelectedBranch('');
+        }, 1000);
+        return () => clearTimeout(timeout);
+
       });
   };
 
@@ -84,45 +82,21 @@ console.log(errors)
                 }
               />
             </Grid>
+
             <Grid item xs={12} sm={6}>
-              <Controller
-                name="regionName"
-                control={control}
-                rules={{ required: 'Region musi być wybrany' }}
-                render={({ field, fieldState }) =>
-                  <TextField
-                    fullWidth
-                    {...field}
-                    placeholder="Region"
-                    disabled={true}
-                    error={!!fieldState.error}
-                    helperText={fieldState.error ? fieldState.error.message : null}
-                  />
-                }
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Controller
-                name="branchName"
-                control={control}
-                rules={{ required: 'Oddział musi być wybrany' }}
-                render={({ field, fieldState }) =>
-                  <TextField
-                    {...field}
-                    fullWidth
-                    placeholder="Oddział"
-                    disabled={true}
-                    error={!!fieldState.error}
-                    helperText={fieldState.error ? fieldState.error.message : null}
-                  />
-                }
-              />
+              <BranchSearch
+                selectedBranch={selectedBranch}
+                selectedRegion={selectedRegion}
+                selectedSection={selectedSection}
+                setSelectedBranch={setSelectedBranch}
+                setSelectedRegion={setSelectedRegion}
+                setSelectedSection={setSelectedSection} />
             </Grid>
             <Grid item xs={12} sm={6}>
               <input {...register('file', { required: 'Wymagany plik w formacie .xlsx lub .xls' })}
                      onChange={handleSubmit}
                      type="file" />
-              {errors.file && <p style={{color:'red'}}>{errors.file.message}</p>}
+              {errors.file && <p style={{ color: 'red' }}>{errors.file.message}</p>}
             </Grid>
             <Grid item sm={12}>
               <Button variant="contained" type="submit">

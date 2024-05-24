@@ -15,6 +15,10 @@ import java.util.List;
 @Data
 @Entity
 public class Branch {
+    @Id
+    @Column(name = "branch_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String branch;
     private String region;
     private String section;
@@ -28,10 +32,7 @@ public class Branch {
     private double geoCoordinateX;
     private double geoCoordinateY;
     private String notes;
-    @Id
-    @Column(name = "branch_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+
 
     @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL)
     private List<Estimate> estimates;

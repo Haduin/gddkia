@@ -34,7 +34,7 @@ const dashboard = {
       id: 'dashboard3',
       title: 'Oddziały',
       type: 'item',
-      url: '/app/region',
+      url: '/app/branch',
       icon: icons.PartitionOutlined,
       breadcrumbs: false
     }

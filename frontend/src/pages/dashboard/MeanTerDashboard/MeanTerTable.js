@@ -10,7 +10,7 @@ import { useAuthentication } from '../../../hooks/useAuthentication';
 
 const columns = [
   { field: 'sst', headerName: 'SST', width: 120 },
-  { field: 'description', headerName: 'Opis', width: 900 },
+  { field: 'description', headerName: 'Opis', width: 700 },
   { field: 'unit', headerName: 'Jednostka', width: 100 },
   {
     headerName: 'Sredni kosztorys',

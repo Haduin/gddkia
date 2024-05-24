@@ -18,21 +18,23 @@ public class EstimateController {
 
     @PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public MainResponse addNewEstimate(
-            @RequestPart MultipartFile file,
+            @RequestParam("file") MultipartFile file,
             @RequestParam("companyName") String companyName,
             @RequestParam("contractName") String contractName,
 //            @RequestParam("dateFrom") String dateFrom,
 //            @RequestParam("dateTo") String dateTo,
+            @RequestParam("branchName") String branchName,
             @RequestParam("regionName") String regionName,
-            @RequestParam("branchName") String branchName
+            @RequestParam("sectionName") String sectionName
     ) throws IOException {
         return estimateService.addNewEstimate(new AddNewEstimateRest(
                 companyName,
                 contractName,
                 null,
                 null,
+                branchName,
                 regionName,
-                branchName
+                sectionName
         ), file.getInputStream());
     }
 

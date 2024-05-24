@@ -8,14 +8,14 @@ import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpStatus
 import org.springframework.test.annotation.DirtiesContext
 import org.testcontainers.junit.jupiter.Testcontainers
-import pl.gddkia.GenreTests
+import pl.gddkia.GenericPostgresTestContainer
 import kotlin.test.assertTrue
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext             // make sure to share spring context when running on testcontainers
 @Testcontainers
-class JwtFilterTest : GenreTests() {
+class JwtFilterTest : GenericPostgresTestContainer() {
 
     val client: TestRestTemplate = TestRestTemplate()
 

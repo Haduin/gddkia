@@ -49,7 +49,7 @@ public class EstimateServiceImpl implements EstimateService {
             TODO repository objects finding saving
          */
         Workbook workbook = WorkbookFactory.create(inputStream);
-        Branch branchOptional = branchRepository.findBranchByBranchEquals(rest.getRegionName())
+        Branch branchOptional = branchRepository.findByBranchAndRegionAndSection(rest.getBranchName(),rest.getRegionName(),rest.getSectionName())
                 .orElseThrow(() -> new RegionNotFoundException(rest.getRegionName()));
 
         Estimate estimate = new Estimate(null, rest.getContractName(), convertStringToOffsetDateTime(rest.getDateFrom()), convertStringToOffsetDateTime(rest.getDateTo()), null, branchOptional);
@@ -144,8 +144,8 @@ public class EstimateServiceImpl implements EstimateService {
                 .map(estimate -> new EstimateRest(
                                 estimate.getId(),
                                 estimate.getContractName(),
-                                estimate.getDateFrom().toString(),
-                                estimate.getDateTo().toString(),
+                                null, //estimate.getDateFrom().toString(),
+                                null, //estimate.getDateTo().toString(),
                                 estimate.getBranch().getBranch(),
                                 groupRepository.findAllByEstimateId(estimate.getId())
                                         .stream()

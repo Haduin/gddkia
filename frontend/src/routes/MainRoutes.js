@@ -7,7 +7,7 @@ import ErrorPage from './ErrorPage';
 
 // render - dashboard
 const MeanTerDashboard = Loadable(lazy(() => import('pages/dashboard/MeanTerDashboard')));
-const RegionDashboard = Loadable(lazy(() => import('pages/dashboard/RegionDetails')));
+const RegionDashboard = Loadable(lazy(() => import('pages/dashboard/BranchDetails')));
 const Ter = Loadable(lazy(() => import('pages/dashboard/TerDashboard')));
 const SamplePage = Loadable(lazy(() => import('pages/extra-pages/SamplePage')));
 

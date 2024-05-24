@@ -30,8 +30,20 @@ public class BranchServiceImpl implements BranchService {
     @Override
     public Optional<BranchRest> getById(Long id) {
         return branchRepository.findById(id)
-                //todo fix null
+                //todo fix null when Optional
                 .map(BranchMapper::mapToRest);
+    }
+
+    @Override
+    public UpdateBranchResult updateBranchDetails(Long branchId, UpdateBranchDto updateRequest) {
+
+        Optional<Branch> optionalBranch = branchRepository.findByBranchAndRegionAndSection(updateRequest.branch(), updateRequest.region(), updateRequest.section())
+                .map(old -> branchRepository.save(BranchMapper.mapToEntity(old, updateRequest)));
+
+        return optionalBranch.isPresent() ?
+                new UpdateBranchResult.SuccessfullyUpdate(String.format("Branch [%s] was updated", branchId)) :
+                new UpdateBranchResult.FailToUpdate(String.format("Branch [%s] was not updated", branchId));
+
     }
 
     /**
@@ -62,21 +74,6 @@ public class BranchServiceImpl implements BranchService {
             case RoadDataProcess.ErrorOccurred errorOccurred ->
                     new SaveBranchRoadsResult.ErrorOccurred(errorOccurred.response());
         };
-    }
-
-    @Override
-    public UpdateBranchResult updateBranchDetails(Long branchId, UpdateBranchDto updateRequest) {
-
-        Optional<Branch> optionalBranch = branchRepository.findByBranchAndRegionAndSection(updateRequest.branch(), updateRequest.region(), updateRequest.section())
-                .map(old -> branchRepository.save(BranchMapper.mapToEntity(old, updateRequest)));
-
-//        Optional<Branch> optionalBranch = branchRepository.findById(branchId)
-//                .map(old -> branchRepository.save(BranchMapper.mapToEntity(old, updateRequest)));
-
-        return optionalBranch.isPresent() ?
-                new UpdateBranchResult.SuccessfullyUpdate(String.format("Branch [%s] was updated", branchId)) :
-                new UpdateBranchResult.FailToUpdate(String.format("Branch [%s] was not updated", branchId));
-
     }
 
     private RoadDataProcess readDataFromFile(final InputStream file) {
