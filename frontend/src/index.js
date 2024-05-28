@@ -15,19 +15,15 @@ import 'assets/third-party/apex-chart.css';
 import App from './App';
 import { store } from 'store';
 import reportWebVitals from './reportWebVitals';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // ==============================|| MAIN - REACT DOM RENDER  ||============================== //
-const queryClient = new QueryClient()
 const container = document.getElementById('root');
 const root = createRoot(container); // createRoot(container!) if you use TypeScript
 root.render(
   <StrictMode>
     <ReduxProvider store={store}>
       <BrowserRouter>
-        <QueryClientProvider client={queryClient}>
-          <App />
-        </QueryClientProvider>
+        <App />
       </BrowserRouter>
     </ReduxProvider>
   </StrictMode>

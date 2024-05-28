@@ -6,10 +6,12 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import ThemeRoutes from './routes';
 
+import 'dayjs/locale/pl'
+
 const App = () => {
   return (
     <ThemeCustomization>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pl">
         <ScrollTop>
           <ThemeRoutes />
         </ScrollTop>

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Button, CircularProgress, Grid, TextField } from '@mui/material';
+import { Button, CircularProgress, Divider, Grid, TextField } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { sendNewTer } from './actions';
 import BranchSearch from '../../../components/BranchSearch';
+import DateSelector from '../../../components/DateSelector';
 
 
 const TerDashboard = () => {
@@ -14,14 +15,18 @@ const TerDashboard = () => {
     defaultValues: {
       companyName: '',
       contractNumber: '',
-      // startDate: '',
-      // endDate: '',
+      roadLength: 0,
       file: ''
     }
   });
 
+  const [selectedStartDate, setSelectedStartDate] = useState(null);
+  const [formattedStartDate, setFormattedStartDate] = useState(null);
+  const [selectedEndDate, setSelectedEndDate] = useState(null);
+  const [formattedEndDate, setFormattedEndDate] = useState(null);
+
   const onSubmit = (data) => {
-    sendNewTer(data.file[0], data.companyName, data.contractNumber, selectedBranch, selectedRegion, selectedSection)
+    sendNewTer(data.file[0], data.companyName, data.contractNumber, selectedBranch, selectedRegion, selectedSection, formattedStartDate, formattedEndDate, data.roadLength)
       .then(response => {
         setLoading(true);
         const timeout = setTimeout(() => {
@@ -80,6 +85,49 @@ const TerDashboard = () => {
                     helperText={fieldState.error ? fieldState.error.message : null}
                   />
                 }
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <DateSelector
+                selectedDate={selectedStartDate}
+                setSelectedDate={setSelectedStartDate}
+                setFormattedDate={setFormattedStartDate}
+                name="selectedDate"
+                label="Wybierz date początkową"
+              />
+              <DateSelector
+                selectedDate={selectedEndDate}
+                setSelectedDate={setSelectedEndDate}
+                setFormattedDate={setFormattedEndDate}
+                name="selectedDate"
+                label="Wybierz datę końcową"
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <Divider/>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Controller
+                name="roadLength"
+                control={control}
+                defaultValue=""
+                rules={{
+                  required: 'To pole jest wymagane'
+                }}
+                render={({ field: { onChange, value }, fieldState: { error } }) => (
+                  <TextField
+                    sx={{ p: 1 }}
+                    fullWidth
+                    label="Długość kilometrów objętych kontraktem"
+                    value={value}
+                    onChange={onChange}
+                    error={!!error}
+                    helperText={error ? error.message : ''}
+                    inputProps={{ type: 'number',min:0 }}
+                  />
+                )}
               />
             </Grid>
 

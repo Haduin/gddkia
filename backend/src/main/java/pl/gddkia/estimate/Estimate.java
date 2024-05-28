@@ -25,6 +25,8 @@ public class Estimate {
     private OffsetDateTime dateFrom;
     @Column(name = "date_to")
     private OffsetDateTime dateTo;
+    @Column(name = "road_length")
+    private Long roadLength;
 
     @OneToMany(mappedBy = "estimate", cascade = CascadeType.ALL)
     private List<Group> groups;

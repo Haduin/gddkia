@@ -21,8 +21,9 @@ public class EstimateController {
             @RequestParam("file") MultipartFile file,
             @RequestParam("companyName") String companyName,
             @RequestParam("contractName") String contractName,
-//            @RequestParam("dateFrom") String dateFrom,
-//            @RequestParam("dateTo") String dateTo,
+            @RequestParam("dateFrom") String dateFrom,
+            @RequestParam("dateTo") String dateTo,
+            @RequestParam("roadLength") Long roadLength,
             @RequestParam("branchName") String branchName,
             @RequestParam("regionName") String regionName,
             @RequestParam("sectionName") String sectionName
@@ -30,11 +31,12 @@ public class EstimateController {
         return estimateService.addNewEstimate(new AddNewEstimateRest(
                 companyName,
                 contractName,
-                null,
-                null,
+                dateFrom,
+                dateTo,
                 branchName,
                 regionName,
-                sectionName
+                sectionName,
+                roadLength
         ), file.getInputStream());
     }
 

@@ -8,5 +8,6 @@ data class AddNewEstimateRest(
     val dateTo: String?,
     val branchName: String,
     val regionName: String,
-    val sectionName: String
+    val sectionName: String,
+    val roadLength: Long
 )

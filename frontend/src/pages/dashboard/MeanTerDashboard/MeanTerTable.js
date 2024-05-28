@@ -77,22 +77,14 @@ function Table() {
           style={{ marginBottom: '20px', marginTop: '20px' }}
         />
       </Grid>
-      {/*<Grid style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '2px' }}>*/}
-      {/*  /!*<FormControl fullWidth>*!/*/}
-      {/*  /!*  <InputLabel>Region</InputLabel>*!/*/}
-      {/*  /!*  <Select label="Nazwa regionu">*!/*/}
-      {/*  /!*    <MenuItem value={0}>Brak</MenuItem>*!/*/}
-      {/*  /!*    {region?.map(eln => (*!/*/}
-      {/*  /!*      <MenuItem key={eln.id} value={eln.id}>{eln.regionName}</MenuItem>*!/*/}
-      {/*  /!*    ))}*!/*/}
-
-      {/*  /!*  </Select>*!/*/}
-      {/*  /!*</FormControl>*!/*/}
-      {/*</Grid>*/}
       <Grid>
         <DataGrid
           rows={filteredRows}
           columns={columns}
+          initialState={{
+            pagination: { paginationModel: { pageSize: 10 } },
+          }}
+          pageSizeOptions={[5, 10, 25]}
         />
       </Grid>
     </Grid>

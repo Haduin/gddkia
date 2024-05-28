@@ -11,6 +11,7 @@ const BranchDetails = () => {
   return (
     <Grid>
       <MainCard>
+        <h2>Przykładowy element </h2>
         <BranchSearch
           selectedBranch={selectedBranch}
           selectedRegion={selectedRegion}
@@ -24,6 +25,7 @@ const BranchDetails = () => {
           <p>Region: {selectedRegion}</p>
           <p>Section: {selectedSection}</p>
         </div>
+
       </MainCard>
     </Grid>
   );

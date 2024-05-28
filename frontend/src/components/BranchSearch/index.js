@@ -50,9 +50,9 @@ const BranchSearch = ({
 
 
   return data.length ? (
-    <Grid container spacing={3}>
-      <Grid item>
-        <FormControl ariant="filled" sx={{ m: 1, minWidth: 350, marginTop: '16px' }}>
+    <Grid container spacing={0.5}>
+      <Grid item xs={12} md={4}>
+        <FormControl fullWidth ariant="filled" sx={{ p: 1 }}>
           <InputLabel id="branch-select-label">Oddział</InputLabel>
           <Select
             labelId="branch-select-label"
@@ -72,8 +72,11 @@ const BranchSearch = ({
           </Select>
         </FormControl>
 
+      </Grid>
+
+      <Grid item xs={12} md={4}>
         {selectedBranch && (
-          <FormControl ariant="filled" sx={{ m: 1, minWidth: 350, marginTop: '16px' }}>
+          <FormControl fullWidth ariant="filled" sx={{ p: 1 }}>
             <InputLabel id="region-select-label">Region</InputLabel>
             <Select
               labelId="region-select-label"
@@ -91,9 +94,11 @@ const BranchSearch = ({
             </Select>
           </FormControl>
         )}
+      </Grid>
 
+      <Grid item xs={12} md={4}>
         {selectedRegion && (
-          <FormControl ariant="filled" sx={{ m: 1, minWidth: 350, marginTop: '16px' }}>
+          <FormControl fullWidth ariant="filled" sx={{ p: 1 }}>
             <InputLabel id="section-select-label">Sektor</InputLabel>
             <Select
               labelId="section-select-label"
@@ -109,6 +114,7 @@ const BranchSearch = ({
           </FormControl>
         )}
       </Grid>
+
     </Grid>
 
   ) : <></>;

@@ -45,18 +45,19 @@ public class EstimateServiceImpl implements EstimateService {
     public MainResponse addNewEstimate(@NotNull final AddNewEstimateRest rest, final InputStream inputStream) throws IOException {
         LOGGER.info("Start saving data from file");
         /*
+            TODO rewrite it to dedicated WorkBook service with all of those methods
             TODO add inputStream file validation
             TODO repository objects finding saving
          */
         Workbook workbook = WorkbookFactory.create(inputStream);
-        Branch branchOptional = branchRepository.findByBranchAndRegionAndSection(rest.getBranchName(),rest.getRegionName(),rest.getSectionName())
+        Branch validatedBranch = branchRepository.findByBranchAndRegionAndSection(rest.getBranchName(), rest.getRegionName(), rest.getSectionName())
                 .orElseThrow(() -> new RegionNotFoundException(rest.getRegionName()));
 
-        Estimate estimate = new Estimate(null, rest.getContractName(), convertStringToOffsetDateTime(rest.getDateFrom()), convertStringToOffsetDateTime(rest.getDateTo()), null, branchOptional);
-        branchOptional.getEstimates().add(estimate);
+        Estimate estimate = new Estimate(null, rest.getContractName(), convertStringToOffsetDateTime(rest.getDateFrom()), convertStringToOffsetDateTime(rest.getDateTo()), rest.getRoadLength(), null, validatedBranch);
+        validatedBranch.getEstimates().add(estimate);
         estimateRepository.save(estimate);
 
-        branchRepository.save(branchOptional);
+        branchRepository.save(validatedBranch);
 
         String sst = "";
 
@@ -144,8 +145,9 @@ public class EstimateServiceImpl implements EstimateService {
                 .map(estimate -> new EstimateRest(
                                 estimate.getId(),
                                 estimate.getContractName(),
-                                null, //estimate.getDateFrom().toString(),
-                                null, //estimate.getDateTo().toString(),
+                                estimate.getDateFrom().toString(),
+                                estimate.getDateTo().toString(),
+                                estimate.getRoadLength(),
                                 estimate.getBranch().getBranch(),
                                 groupRepository.findAllByEstimateId(estimate.getId())
                                         .stream()
