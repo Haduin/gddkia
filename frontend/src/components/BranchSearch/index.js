@@ -26,25 +26,25 @@ const BranchSearch = ({
         .filter(item => item.branch === selectedBranch)
         .map(item => item.region);
       setFilteredRegions([...new Set(regions)]);
-      setSelectedRegion('');
-      setSelectedSection('');
+      setSelectedRegion([]);
+      setSelectedSection([]);
     } else {
       setFilteredRegions([]);
-      setSelectedRegion('');
-      setSelectedSection('');
+      setSelectedRegion([]);
+      setSelectedSection([]);
     }
   }, [selectedBranch]);
 
   useEffect(() => {
-    if (selectedRegion) {
+    if (selectedRegion.length > 0) {
       const sections = data
-        .filter(item => item.branch === selectedBranch && item.region === selectedRegion)
+        .filter(item => item.branch === selectedBranch && selectedRegion.includes(item.region))
         .map(item => item.section);
       setFilteredSections([...new Set(sections)]);
-      setSelectedSection('');
+      setSelectedSection([]);
     } else {
       setFilteredSections([]);
-      setSelectedSection('');
+      setSelectedSection([]);
     }
   }, [selectedRegion]);
 
@@ -59,8 +59,8 @@ const BranchSearch = ({
             value={selectedBranch}
             onChange={(e) => {
               setSelectedBranch(e.target.value);
-              setSelectedRegion('');
-              setSelectedSection('');
+              setSelectedRegion([]);
+              setSelectedSection([]);
             }}
           >
 
@@ -75,15 +75,16 @@ const BranchSearch = ({
       </Grid>
 
       <Grid item xs={12} md={4}>
-        {selectedBranch && (
+        {selectedBranch.length > 0 && (
           <FormControl fullWidth ariant="filled" sx={{ p: 1 }}>
             <InputLabel id="region-select-label">Region</InputLabel>
             <Select
+              multiple
               labelId="region-select-label"
               value={selectedRegion}
               onChange={(e) => {
                 setSelectedRegion(e.target.value);
-                setSelectedSection('');
+                setSelectedSection([]);
               }}
             >
               {filteredRegions.map((region, index) => (
@@ -97,10 +98,11 @@ const BranchSearch = ({
       </Grid>
 
       <Grid item xs={12} md={4}>
-        {selectedRegion && (
+        {selectedRegion.length > 0 && (
           <FormControl fullWidth ariant="filled" sx={{ p: 1 }}>
             <InputLabel id="section-select-label">Sektor</InputLabel>
             <Select
+              multiple
               labelId="section-select-label"
               value={selectedSection}
               onChange={(e) => setSelectedSection(e.target.value)}

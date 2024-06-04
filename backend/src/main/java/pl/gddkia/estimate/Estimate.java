@@ -31,7 +31,16 @@ public class Estimate {
     @OneToMany(mappedBy = "estimate", cascade = CascadeType.ALL)
     private List<Group> groups;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "branch_id")
-    private Branch branch;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "branch_estimate",
+            joinColumns = @JoinColumn(name = "estimate_id"),
+            inverseJoinColumns = @JoinColumn(name = "branch_id")
+    )
+    private List<Branch> branches;
+
+    public void addEstimate(Branch branch) {
+        this.branches.add(branch);
+        branch.getEstimates().forEach(estimate -> estimate.branches.add(branch));
+    }
 }

@@ -25,6 +25,7 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,14 +51,19 @@ public class EstimateServiceImpl implements EstimateService {
             TODO repository objects finding saving
          */
         Workbook workbook = WorkbookFactory.create(inputStream);
-        Branch validatedBranch = branchRepository.findByBranchAndRegionAndSection(rest.getBranchName(), rest.getRegionName(), rest.getSectionName())
-                .orElseThrow(() -> new RegionNotFoundException(rest.getRegionName()));
 
-        Estimate estimate = new Estimate(null, rest.getContractName(), convertStringToOffsetDateTime(rest.getDateFrom()), convertStringToOffsetDateTime(rest.getDateTo()), rest.getRoadLength(), null, validatedBranch);
-        validatedBranch.getEstimates().add(estimate);
+
+        var branchList = new ArrayList<Branch>();
+
+        Arrays.asList(rest.sectionName())
+                .forEach(section -> branchRepository.findBySection(section)
+                        .map(branchList::add)
+                        .orElseThrow(() -> new RegionNotFoundException(section)));
+
+
+        Estimate estimate = new Estimate(null, rest.contractName(), convertStringToOffsetDateTime(rest.dateFrom()), convertStringToOffsetDateTime(rest.dateTo()), rest.roadLength(), null, branchList);
+        branchList.forEach(branch -> branch.addEstimate(estimate));
         estimateRepository.save(estimate);
-
-        branchRepository.save(validatedBranch);
 
         String sst = "";
 
@@ -148,7 +154,7 @@ public class EstimateServiceImpl implements EstimateService {
                                 estimate.getDateFrom().toString(),
                                 estimate.getDateTo().toString(),
                                 estimate.getRoadLength(),
-                                estimate.getBranch().getBranch(),
+                                null, //todo for now
                                 groupRepository.findAllByEstimateId(estimate.getId())
                                         .stream()
                                         .collect(

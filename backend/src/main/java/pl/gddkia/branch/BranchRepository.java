@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface BranchRepository extends JpaRepository<Branch, Long> {
     Optional<Branch> findByBranchAndRegionAndSection(String branch, String region, String section);
+    Optional<Branch> findBySection(String section);
 }

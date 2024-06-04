@@ -4,10 +4,10 @@ import MainCard from '../../../components/MainCard';
 import BranchSearch from '../../../components/BranchSearch';
 
 const BranchDetails = () => {
-  const [selectedBranch, setSelectedBranch] = useState('');
-  const [selectedRegion, setSelectedRegion] = useState('');
-  const [selectedSection, setSelectedSection] = useState('');
-
+  const [selectedBranch, setSelectedBranch] = useState([]);
+  const [selectedRegion, setSelectedRegion] = useState([]);
+  const [selectedSection, setSelectedSection] = useState([]);
+  
   return (
     <Grid>
       <MainCard>

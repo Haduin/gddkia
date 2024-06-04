@@ -12,5 +12,6 @@ export const sendNewTer = async (file, companyName, contractNumber, branchName, 
   formData.append('branchName', branchName);
   formData.append('regionName', regionName);
   formData.append('sectionName', sectionName);
+  console.log(regionName,branchName, sectionName)
   return await axios.post(`${config.backend}/estimate/upload`, formData);
 };

@@ -34,7 +34,12 @@ public class Branch {
     private String notes;
 
 
-    @OneToMany(mappedBy = "branch", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "branches")
     private List<Estimate> estimates;
+
+    public void addEstimate(Estimate estimate) {
+        this.estimates.add(estimate);
+        estimate.getBranches().forEach(e -> e.estimates.add(estimate));
+    }
 }
 

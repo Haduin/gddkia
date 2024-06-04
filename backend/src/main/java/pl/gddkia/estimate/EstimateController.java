@@ -25,8 +25,8 @@ public class EstimateController {
             @RequestParam("dateTo") String dateTo,
             @RequestParam("roadLength") Long roadLength,
             @RequestParam("branchName") String branchName,
-            @RequestParam("regionName") String regionName,
-            @RequestParam("sectionName") String sectionName
+            @RequestParam("regionName") String[] regionName,
+            @RequestParam("sectionName") String[] sectionName
     ) throws IOException {
         return estimateService.addNewEstimate(new AddNewEstimateRest(
                 companyName,

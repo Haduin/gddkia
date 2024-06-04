@@ -9,8 +9,8 @@ import DateSelector from '../../../components/DateSelector';
 const TerDashboard = () => {
   const [loading, setLoading] = useState(false);
   const [selectedBranch, setSelectedBranch] = useState('');
-  const [selectedRegion, setSelectedRegion] = useState('');
-  const [selectedSection, setSelectedSection] = useState('');
+  const [selectedRegion, setSelectedRegion] = useState([]);
+  const [selectedSection, setSelectedSection] = useState([]);
   const { control, register, formState: { errors }, handleSubmit, reset } = useForm({
     defaultValues: {
       companyName: '',
