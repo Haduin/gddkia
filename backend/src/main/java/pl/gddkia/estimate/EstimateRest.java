@@ -10,7 +10,7 @@ public record EstimateRest(
         String contractName,
         String dateFrom,
         String dateTo,
-        String region,
+        Long roadLength,
         String branch,
         Map<String, List<JobRest>>jobsPerGroup
         ) {

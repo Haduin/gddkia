@@ -15,16 +15,27 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDetails> handle(RegionNotFoundException e) {
         return new ResponseEntity<>(new ErrorDetails(e.getMessage()), HttpStatus.NOT_FOUND);
     }
+
     @ExceptionHandler(InvalidCredentials.class)
     public ResponseEntity<ErrorDetails> handle(InvalidCredentials e) {
         return new ResponseEntity<>(new ErrorDetails(e.getMessage()), HttpStatus.NOT_FOUND);
     }
+
     @ExceptionHandler(InternalAuthenticationServiceException.class)
     public ResponseEntity<ErrorDetails> handle(InternalAuthenticationServiceException e) {
         return new ResponseEntity<>(new ErrorDetails(e.getMessage()), HttpStatus.OK);
     }
+
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<ErrorDetails> handle(JwtException e) {
         return new ResponseEntity<>(new ErrorDetails(e.getMessage()), HttpStatus.UNAUTHORIZED);
     }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<ErrorDetails> handle(Exception e) {
+//        return new ResponseEntity<>(new ErrorDetails(e.getMessage()), HttpStatus.BAD_REQUEST);
+//    }
+//    @ExceptionHandler(ExpiredJwtException.class)
+//    public ResponseEntity<ErrorDetails> handle(ExpiredJwtException e) {
+//        return new ResponseEntity<>(new ErrorDetails(e.getMessage()), HttpStatus.UNAUTHORIZED);
+//    }
 }

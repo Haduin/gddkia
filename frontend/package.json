@@ -19,6 +19,7 @@
     "@testing-library/user-event": "^14.4.3",
     "apexcharts": "^3.35.5",
     "axios": "^1.6.5",
+    "date-fns": "^3.6.0",
     "dayjs": "^1.11.10",
     "formik": "^2.2.9",
     "framer-motion": "^7.3.6",

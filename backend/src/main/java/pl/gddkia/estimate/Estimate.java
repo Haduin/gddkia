@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.gddkia.group.Group;
-import pl.gddkia.region.Region;
+import pl.gddkia.branch.Branch;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -25,11 +25,22 @@ public class Estimate {
     private OffsetDateTime dateFrom;
     @Column(name = "date_to")
     private OffsetDateTime dateTo;
+    @Column(name = "road_length")
+    private Long roadLength;
 
     @OneToMany(mappedBy = "estimate", cascade = CascadeType.ALL)
     private List<Group> groups;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "region_id")
-    private Region region;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "branch_estimate",
+            joinColumns = @JoinColumn(name = "estimate_id"),
+            inverseJoinColumns = @JoinColumn(name = "branch_id")
+    )
+    private List<Branch> branches;
+
+    public void addEstimate(Branch branch) {
+        this.branches.add(branch);
+        branch.getEstimates().forEach(estimate -> estimate.branches.add(branch));
+    }
 }

@@ -6,11 +6,11 @@ import { Box, Grid, TableContainer, TextField } from '@mui/material';
 // project import
 import { useEffect, useState } from 'react';
 import { fetchJobs } from './actions';
-import { handleLogout } from '../../../commons';
+import { useAuthentication } from '../../../hooks/useAuthentication';
 
 const columns = [
   { field: 'sst', headerName: 'SST', width: 120 },
-  { field: 'description', headerName: 'Opis', width: 900 },
+  { field: 'description', headerName: 'Opis', width: 700 },
   { field: 'unit', headerName: 'Jednostka', width: 100 },
   {
     headerName: 'Sredni kosztorys',
@@ -21,6 +21,7 @@ const columns = [
 ];
 
 function Table() {
+  const {handleLogout} = useAuthentication()
   const [rows, setRows] = useState([]);
   const [filterText, setFilterText] = useState('');
   const [filteredRows, setFilteredRows] = useState(rows);
@@ -76,22 +77,14 @@ function Table() {
           style={{ marginBottom: '20px', marginTop: '20px' }}
         />
       </Grid>
-      {/*<Grid style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '2px' }}>*/}
-      {/*  /!*<FormControl fullWidth>*!/*/}
-      {/*  /!*  <InputLabel>Region</InputLabel>*!/*/}
-      {/*  /!*  <Select label="Nazwa regionu">*!/*/}
-      {/*  /!*    <MenuItem value={0}>Brak</MenuItem>*!/*/}
-      {/*  /!*    {region?.map(eln => (*!/*/}
-      {/*  /!*      <MenuItem key={eln.id} value={eln.id}>{eln.regionName}</MenuItem>*!/*/}
-      {/*  /!*    ))}*!/*/}
-
-      {/*  /!*  </Select>*!/*/}
-      {/*  /!*</FormControl>*!/*/}
-      {/*</Grid>*/}
       <Grid>
         <DataGrid
           rows={filteredRows}
           columns={columns}
+          initialState={{
+            pagination: { paginationModel: { pageSize: 10 } },
+          }}
+          pageSizeOptions={[5, 10, 25]}
         />
       </Grid>
     </Grid>

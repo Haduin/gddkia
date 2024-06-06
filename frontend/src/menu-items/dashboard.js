@@ -1,9 +1,10 @@
 // assets
-import { DashboardOutlined } from '@ant-design/icons';
-
+import { DashboardOutlined, PartitionOutlined, TableOutlined } from '@ant-design/icons';
 // icons
 const icons = {
-  DashboardOutlined
+  DashboardOutlined,
+  PartitionOutlined,
+  TableOutlined
 };
 
 // ==============================|| MENU ITEMS - DASHBOARD ||============================== //
@@ -17,16 +18,24 @@ const dashboard = {
       id: 'dashboard1',
       title: 'Jednostkowe ceny prac',
       type: 'item',
-      url: '/ter',
+      url: '/app/ter',
       icon: icons.DashboardOutlined,
       breadcrumbs: false
     },
     {
-      id: 'dashboard',
+      id: 'dashboard2',
       title: 'Średnie ceny prac',
       type: 'item',
-      url: '/ter/srednie',
-      icon: icons.DashboardOutlined,
+      url: '/app/ter/srednie',
+      icon: icons.TableOutlined,
+      breadcrumbs: false
+    },
+    {
+      id: 'dashboard3',
+      title: 'Oddziały',
+      type: 'item',
+      url: '/app/branch',
+      icon: icons.PartitionOutlined,
       breadcrumbs: false
     }
   ]

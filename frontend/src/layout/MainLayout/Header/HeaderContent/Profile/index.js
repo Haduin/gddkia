@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useContext, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -28,9 +28,7 @@ import SettingTab from './SettingTab';
 // assets
 import avatar1 from 'assets/images/users/avatar-1.png';
 import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
-import { updatePartialState } from '../../../../../commons';
-import { UserContext } from '../../../../../App';
-import { useNavigate } from 'react-router-dom';
+import { useAuthentication } from '../../../../../hooks/useAuthentication';
 
 // tab panel wrapper
 function TabPanel({ children, value, index, ...other }) {
@@ -58,15 +56,9 @@ function a11yProps(index) {
 // ==============================|| HEADER CONTENT - PROFILE ||============================== //
 
 const Profile = () => {
-  const { setUserData } = useContext(UserContext);
-  const nav = useNavigate();
+  const { handleLogout } = useAuthentication();
   const theme = useTheme();
 
-  const handleLogout = async () => {
-    localStorage.clear();
-    updatePartialState(setUserData, { isAuthenticated: false });
-    nav('/login');
-  };
 
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);

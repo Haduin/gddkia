@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
 
 plugins {
 	java
-	id("org.springframework.boot") version "3.1.5"
+	id("org.springframework.boot") version "3.2.0"
 	id("io.spring.dependency-management") version "1.1.3"
 	kotlin("plugin.spring") version "1.6.0"
 	kotlin("jvm")
@@ -27,13 +27,17 @@ repositories {
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-security")
+
 
 	implementation("io.jsonwebtoken:jjwt-api:$jwtVersion")
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:$jwtVersion")
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jwtVersion")
 
+	implementation("org.jetbrains.kotlin:kotlin-reflect")
+	implementation(kotlin("stdlib-jdk8"))
 
 	compileOnly("org.projectlombok:lombok")
 	runtimeOnly("org.postgresql:postgresql")
@@ -43,7 +47,12 @@ dependencies {
 
 	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	implementation(kotlin("stdlib-jdk8"))
+	testImplementation("org.springframework.security:spring-security-test")
+	testImplementation("org.jetbrains.kotlin:kotlin-test")
+
+	testImplementation("org.testcontainers:testcontainers")
+	testImplementation("org.testcontainers:postgresql:1.19.7")
+	testImplementation("org.testcontainers:junit-jupiter")
 }
 
 tasks.withType<Test> {

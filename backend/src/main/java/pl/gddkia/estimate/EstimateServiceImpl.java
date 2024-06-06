@@ -6,8 +6,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.*;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
-import pl.gddkia.branch.BranchRepository;
 import pl.gddkia.exceptions.MainResponse;
 import pl.gddkia.exceptions.RegionNotFoundException;
 import pl.gddkia.group.GROUP_NAME;
@@ -16,8 +16,8 @@ import pl.gddkia.group.GroupRepository;
 import pl.gddkia.job.Jobs;
 import pl.gddkia.job.JobRepository;
 import pl.gddkia.job.JobRest;
-import pl.gddkia.region.Region;
-import pl.gddkia.region.RegionRepository;
+import pl.gddkia.branch.Branch;
+import pl.gddkia.branch.BranchRepository;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,6 +25,7 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +36,6 @@ public class EstimateServiceImpl implements EstimateService {
     private final GroupRepository groupRepository;
     private final EstimateRepository estimateRepository;
     private final BranchRepository branchRepository;
-    private final RegionRepository regionRepository;
 
 
     private final Logger LOGGER = LogManager.getLogger(EstimateServiceImpl.class);
@@ -43,21 +43,27 @@ public class EstimateServiceImpl implements EstimateService {
 
     @Transactional
     @Override
-    public MainResponse addNewEstimate(final AddNewEstimateRest rest, final InputStream inputStream) throws IOException {
+    public MainResponse addNewEstimate(@NotNull final AddNewEstimateRest rest, final InputStream inputStream) throws IOException {
         LOGGER.info("Start saving data from file");
         /*
+            TODO rewrite it to dedicated WorkBook service with all of those methods
             TODO add inputStream file validation
             TODO repository objects finding saving
          */
         Workbook workbook = WorkbookFactory.create(inputStream);
-        Region regionOptional = regionRepository.findByRegionNameEquals(rest.regionName())
-                .orElseThrow(() -> new RegionNotFoundException(rest.regionName()));
 
-        Estimate estimate = new Estimate(null, rest.contractName(), convertStringToOffsetDateTime(rest.dateFrom()), convertStringToOffsetDateTime(rest.dateTo()), null, regionOptional);
-        regionOptional.getEstimates().add(estimate);
+
+        var branchList = new ArrayList<Branch>();
+
+        Arrays.asList(rest.sectionName())
+                .forEach(section -> branchRepository.findBySection(section)
+                        .map(branchList::add)
+                        .orElseThrow(() -> new RegionNotFoundException(section)));
+
+
+        Estimate estimate = new Estimate(null, rest.contractName(), convertStringToOffsetDateTime(rest.dateFrom()), convertStringToOffsetDateTime(rest.dateTo()), rest.roadLength(), null, branchList);
+        branchList.forEach(branch -> branch.addEstimate(estimate));
         estimateRepository.save(estimate);
-
-        regionRepository.save(regionOptional);
 
         String sst = "";
 
@@ -147,8 +153,8 @@ public class EstimateServiceImpl implements EstimateService {
                                 estimate.getContractName(),
                                 estimate.getDateFrom().toString(),
                                 estimate.getDateTo().toString(),
-                                estimate.getRegion().getRegionName(),
-                                estimate.getRegion().getBranch().getBranchName(),
+                                estimate.getRoadLength(),
+                                null, //todo for now
                                 groupRepository.findAllByEstimateId(estimate.getId())
                                         .stream()
                                         .collect(
