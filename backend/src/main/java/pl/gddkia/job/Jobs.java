@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.gddkia.group.Group;
+import pl.gddkia.estimate.Estimate;
+
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -23,9 +25,15 @@ public class Jobs {
     @Column(columnDefinition = "double precision default 1")
     private Double costEstimate;
     private Double quantity;
+    private String groupType;
     private String subType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_id")
-    private Group group;
+    @ManyToMany(mappedBy = "jobs")
+    private List<Estimate> estimates;
+
+    public void addEstimate(Estimate estimate) {
+        this.estimates.add(estimate);
+        estimate.getJobs().forEach(e -> e.estimates.add(estimate));
+    }
+
 }

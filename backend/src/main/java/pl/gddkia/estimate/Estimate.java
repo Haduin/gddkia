@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.gddkia.group.Group;
 import pl.gddkia.branch.Branch;
+import pl.gddkia.job.Jobs;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -28,19 +28,21 @@ public class Estimate {
     @Column(name = "road_length")
     private Long roadLength;
 
-    @OneToMany(mappedBy = "estimate", cascade = CascadeType.ALL)
-    private List<Group> groups;
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "branch_estimate",
+            name = "estimate_branch",
             joinColumns = @JoinColumn(name = "estimate_id"),
             inverseJoinColumns = @JoinColumn(name = "branch_id")
     )
     private List<Branch> branches;
 
-    public void addEstimate(Branch branch) {
-        this.branches.add(branch);
-        branch.getEstimates().forEach(estimate -> estimate.branches.add(branch));
-    }
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "estimate_jobs",
+            joinColumns = @JoinColumn(name = "estimate_id"),
+            inverseJoinColumns = @JoinColumn(name = "jobs_id")
+    )
+    private List<Jobs> jobs;
+
 }
