@@ -12,6 +12,8 @@ public record JobRest(
         @JsonInclude(JsonInclude.Include.NON_NULL)
         Double quantity,
         @JsonInclude(JsonInclude.Include.NON_NULL)
-        String subType
+        String subType,
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        String groupType
 ) {
 }

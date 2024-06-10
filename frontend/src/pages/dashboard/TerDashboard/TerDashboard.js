@@ -52,7 +52,7 @@ const TerDashboard = () => {
       :
       <Grid>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <h2>Formularz dodawania nowego TERA</h2>
+          <h2>Formularz dodawania TER</h2>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <Controller

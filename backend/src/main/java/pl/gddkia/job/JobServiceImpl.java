@@ -1,6 +1,7 @@
 package pl.gddkia.job;
 
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,20 +22,22 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<JobRest> getAllJobs() {
-        return repository.findAll()
+    public List<AvgJobsDetails> getAllJobs(final FilteredJobsDetails details) {
+        return repository.getExample(details.selectedBranch(), details.selectedRegion(), details.selectedSection(),details.startDate(), details.endDate())
                 .stream()
-                //TODO change it to Mapper
-                .map(job -> new JobRest(job.getSST(), job.getDescription(), job.getUnit(), job.getCostEstimate(), job.getQuantity(), job.getSubType()))
+                .map(this::mapToAvgJobsDetails)
                 .toList();
     }
 
+    @NotNull
     private AvgJobsDetails mapToAvgJobsDetails(Object[] result) {
         return new AvgJobsDetails(
                 (String) result[0],
                 (String) result[1],
                 (String) result[2],
-                (Double) result[3]
+                (String) result[3],
+                (String) result[4],
+                (Double) result[5]
         );
     }
 
