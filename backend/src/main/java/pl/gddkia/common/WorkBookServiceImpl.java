@@ -18,8 +18,8 @@ import pl.gddkia.job.Jobs;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -31,11 +31,11 @@ public class WorkBookServiceImpl implements WorkBookService {
 
 
     @Override
-    public WorkbookCreationStatus addNewEstimateWorkbook(final InputStream inputStream, final Estimate estimate, List<Branch> branchList ) {
+    public WorkbookCreationStatus addNewEstimateWorkbook(final InputStream inputStream, final Estimate estimate, Set<Branch> branchList) {
         try {
             LOGGER.info("Start saving data from file"); //todo extend information like, file name, user etc
             String sst = "";
-            List<Jobs> jobsList = new ArrayList<>();
+            Set<Jobs> jobsList = new HashSet<>();
             Workbook workbook = WorkbookFactory.create(inputStream);
             for (int sheetIndex = 0; sheetIndex < workbook.getNumberOfSheets() && sheetIndex <= 8; sheetIndex++) {
                 Sheet sheetAt = workbook.getSheetAt(sheetIndex);
@@ -94,8 +94,7 @@ public class WorkBookServiceImpl implements WorkBookService {
             return new WorkbookCreationStatus.Successfully();
         } catch (IOException e) {
             return new WorkbookCreationStatus.Failed("File not found");
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return new WorkbookCreationStatus.Failed("Something went wrong");
         }
     }

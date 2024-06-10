@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface JobService {
     List<AvgJobsDetails> getAllJobsWithMeanEstimate();
-    List<JobRest> getAllJobs();
+    List<AvgJobsDetails> getAllJobs(FilteredJobsDetails details);
 }

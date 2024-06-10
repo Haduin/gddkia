@@ -3,12 +3,17 @@ package pl.gddkia.estimate;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.HashCodeExclude;
 import pl.gddkia.branch.Branch;
 import pl.gddkia.job.Jobs;
 
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @AllArgsConstructor
@@ -21,10 +26,10 @@ public class Estimate {
     private Long id;
     @Column(name = "contract_name")
     private String contractName;
-    @Column(name = "date_from")
-    private OffsetDateTime dateFrom;
-    @Column(name = "date_to")
-    private OffsetDateTime dateTo;
+    @Column(name = "date_from", columnDefinition = "date")
+    private LocalDate dateFrom;
+    @Column(name = "date_to", columnDefinition = "date")
+    private LocalDate dateTo;
     @Column(name = "road_length")
     private Long roadLength;
 
@@ -34,7 +39,7 @@ public class Estimate {
             joinColumns = @JoinColumn(name = "estimate_id"),
             inverseJoinColumns = @JoinColumn(name = "branch_id")
     )
-    private List<Branch> branches;
+    private Set<Branch> branches;
 
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -43,6 +48,21 @@ public class Estimate {
             joinColumns = @JoinColumn(name = "estimate_id"),
             inverseJoinColumns = @JoinColumn(name = "jobs_id")
     )
-    private List<Jobs> jobs;
+    private Set<Jobs> jobs;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Estimate estimate = (Estimate) o;
+
+        return new EqualsBuilder().append(id, estimate.id).append(contractName, estimate.contractName).append(dateFrom, estimate.dateFrom).append(dateTo, estimate.dateTo).append(roadLength, estimate.roadLength).append(branches, estimate.branches).append(jobs, estimate.jobs).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37).append(id).append(contractName).append(dateFrom).append(dateTo).append(roadLength).append(branches).append(jobs).toHashCode();
+    }
 }

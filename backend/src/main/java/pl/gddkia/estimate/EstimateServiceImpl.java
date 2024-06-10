@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.boot.autoconfigure.batch.BatchProperties;
 import org.springframework.stereotype.Service;
 import pl.gddkia.branch.Branch;
 import pl.gddkia.branch.BranchRepository;
@@ -13,9 +12,7 @@ import pl.gddkia.common.WorkBookService;
 import pl.gddkia.exceptions.MainResponse;
 import pl.gddkia.exceptions.RegionNotFoundException;
 import pl.gddkia.job.JobMapper;
-import pl.gddkia.job.JobRepository;
 import pl.gddkia.job.JobRest;
-import pl.gddkia.job.Jobs;
 
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -23,12 +20,12 @@ import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class EstimateServiceImpl implements EstimateService {
-    private final JobRepository jobRepository;
     private final EstimateRepository estimateRepository;
     private final BranchRepository branchRepository;
     private final WorkBookService workBookService;
@@ -42,8 +39,8 @@ public class EstimateServiceImpl implements EstimateService {
     public MainResponse addNewEstimate(@NotNull final AddNewEstimateRest rest, final InputStream inputStream) {
         LOGGER.info("Start saving data from file");
 
-        List<Branch> branchList = findSectionFromArrayString(rest.sectionName());
-        Estimate estimate = new Estimate(null, rest.contractName(), convertStringToOffsetDateTime(rest.dateFrom()), convertStringToOffsetDateTime(rest.dateTo()), rest.roadLength(), branchList, null);
+        Set<Branch> branchList = findSectionFromArrayString(rest.sectionName());
+        Estimate estimate = new Estimate(null, rest.contractName(), parseDate(rest.dateFrom()), parseDate(rest.dateTo()), rest.roadLength(), branchList, null);
         branchList.forEach(branch -> branch.addEstimate(estimate));
 
         LOGGER.info("End of data");
@@ -81,20 +78,16 @@ public class EstimateServiceImpl implements EstimateService {
         return null;
     }
 
-    public OffsetDateTime convertStringToOffsetDateTime(String dateString) {
-        try {
-            LocalDate localDate = LocalDate.parse(dateString, formatter);
-            return OffsetDateTime.of(localDate.atStartOfDay(), OffsetDateTime.now().getOffset());
-        } catch (Exception e) {
-            return null;
-        }
+    public LocalDate parseDate(String dateString) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return LocalDate.parse(dateString, formatter);
     }
 
 
-    private List<Branch> findSectionFromArrayString(final String[] sectionArray) {
+    private Set<Branch> findSectionFromArrayString(final String[] sectionArray) {
         return Arrays.stream(sectionArray)
                 .map(section -> branchRepository.findBySection(section)
                         .orElseThrow(() -> new RegionNotFoundException(section)))
-                .toList();
+                .collect(Collectors.toSet());
     }
 }

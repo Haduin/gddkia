@@ -2,14 +2,13 @@ package pl.gddkia.common;
 
 import pl.gddkia.branch.Branch;
 import pl.gddkia.estimate.Estimate;
-import pl.gddkia.job.Jobs;
 
 import java.io.InputStream;
-import java.util.List;
+import java.util.Set;
 
 public interface WorkBookService {
 
-    WorkbookCreationStatus addNewEstimateWorkbook(final InputStream inputStream, final Estimate estimate, List<Branch> branchList);
+    WorkbookCreationStatus addNewEstimateWorkbook(final InputStream inputStream, final Estimate estimate, Set<Branch> branchList);
 
     sealed interface WorkbookCreationStatus permits WorkBookService.WorkbookCreationStatus.Failed, WorkbookCreationStatus.Successfully {
         record Successfully() implements WorkbookCreationStatus {
