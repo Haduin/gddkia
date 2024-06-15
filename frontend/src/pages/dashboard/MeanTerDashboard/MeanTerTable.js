@@ -6,7 +6,6 @@ import { Box, Grid, TableContainer, TextField } from '@mui/material';
 // project import
 import { useEffect, useState } from 'react';
 import { fetchJobs } from './actions';
-import { useAuthentication } from '../../../hooks/useAuthentication';
 
 const columns = [
   { field: 'sst', headerName: 'SST', width: 120 },
@@ -21,7 +20,6 @@ const columns = [
 ];
 
 function Table() {
-  const {handleLogout} = useAuthentication()
   const [rows, setRows] = useState([]);
   const [filterText, setFilterText] = useState('');
   const [filteredRows, setFilteredRows] = useState(rows);
@@ -56,8 +54,7 @@ function Table() {
           )
         ));
       }).catch(err => {
-      if (err.response.status === 403)
-        handleLogout();
+        console.log(err)
     });
   }, []);
 

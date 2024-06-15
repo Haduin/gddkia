@@ -1,7 +1,7 @@
 services:
-  postgres:
-    image: postgres:latest
-    container_name: my_postgres_db
+  backend_postgres_db:
+    image: postgres:16.2
+    container_name: gddkia_postgres_db
     environment:
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypassword
@@ -9,7 +9,45 @@ services:
     ports:
       - "61500:5432"
     volumes:
-      - pg_data:/var/lib/postgresql/data
+      - gddkia_postgres_data:/var/lib/postgresql/data
+
+  keycloak_postgres_db:
+    image: postgres:16.2
+    container_name: keycloak_postgres_db
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydb
+    volumes:
+      - keycloak_postgres_data:/var/lib/postgresql/data
+    networks:
+      - keycloak_network
+
+  keycloak:
+    image: quay.io/keycloak/keycloak
+    container_name: keycloak
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak_postgres_db/mydb
+      KC_DB_USERNAME: myuser
+      KC_DB_PASSWORD: mypassword
+    networks:
+      - keycloak_network
+    ports:
+      - "8081:8080"
+    depends_on:
+      - keycloak_postgres_db
+    command: start-dev
+
 
 volumes:
-  pg_data:
+  keycloak_postgres_data:
+    driver: local
+  gddkia_postgres_data:
+    driver: local
+
+networks:
+  keycloak_network:
+    driver: bridge

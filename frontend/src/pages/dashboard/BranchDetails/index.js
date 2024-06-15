@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Grid } from '@mui/material';
 import MainCard from '../../../components/MainCard';
 import BranchSearch from '../../../components/BranchSearch';
+import { KeyClockContext } from '../../../App';
 
 const BranchDetails = () => {
+
   const [selectedBranch, setSelectedBranch] = useState([]);
   const [selectedRegion, setSelectedRegion] = useState([]);
   const [selectedSection, setSelectedSection] = useState([]);
-  
+  const keyclock= useContext(KeyClockContext)
+
   return (
     <Grid>
       <MainCard>

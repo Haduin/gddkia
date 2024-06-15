@@ -30,11 +30,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-security")
-
-
-	implementation("io.jsonwebtoken:jjwt-api:$jwtVersion")
-	runtimeOnly("io.jsonwebtoken:jjwt-impl:$jwtVersion")
-	runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jwtVersion")
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation(kotlin("stdlib-jdk8"))

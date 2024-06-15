@@ -25,7 +25,7 @@ class JwtFilterTest : GenericPostgresTestContainer() {
     @Test
     fun `example test 1`() {
         val entity = client.getForEntity<String>("http://localhost:$localServerPort/region")
-        assertTrue { entity.statusCode == HttpStatus.FORBIDDEN }
+        assertTrue { entity.statusCode == HttpStatus.UNAUTHORIZED }
     }
 
 }
