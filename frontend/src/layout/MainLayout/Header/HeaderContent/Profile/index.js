@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -28,7 +28,7 @@ import SettingTab from './SettingTab';
 // assets
 import avatar1 from 'assets/images/users/avatar-1.png';
 import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
-import { useAuthentication } from '../../../../../hooks/useAuthentication';
+import { KeyClockContext } from '../../../../../App';
 
 // tab panel wrapper
 function TabPanel({ children, value, index, ...other }) {
@@ -56,7 +56,7 @@ function a11yProps(index) {
 // ==============================|| HEADER CONTENT - PROFILE ||============================== //
 
 const Profile = () => {
-  const { handleLogout } = useAuthentication();
+  const keycloak= useContext(KeyClockContext)
   const theme = useTheme();
 
 
@@ -98,7 +98,7 @@ const Profile = () => {
       >
         <Stack direction="row" spacing={2} alignItems="center" sx={{ p: 0.5 }}>
           <Avatar alt="profile user" src={avatar1} sx={{ width: 32, height: 32 }} />
-          <Typography variant="subtitle1">Imie i Nazwisko</Typography>
+          <Typography variant="subtitle1">{keycloak?.tokenParsed?.name}</Typography>
         </Stack>
       </ButtonBase>
       <Popper
@@ -149,7 +149,7 @@ const Profile = () => {
                           </Stack>
                         </Grid>
                         <Grid item>
-                          <IconButton size="large" color="secondary" onClick={handleLogout}>
+                          <IconButton size="large" color="secondary">
                             <LogoutOutlined />
                           </IconButton>
                         </Grid>
@@ -186,7 +186,7 @@ const Profile = () => {
                           </Tabs>
                         </Box>
                         <TabPanel value={value} index={0} dir={theme.direction}>
-                          <ProfileTab handleLogout={handleLogout} />
+                          <ProfileTab handleLogout={()=>keycloak.logout()} />
                         </TabPanel>
                         <TabPanel value={value} index={1} dir={theme.direction}>
                           <SettingTab />
