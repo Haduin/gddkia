@@ -35,6 +35,8 @@ class SecurityConfig(private val converter: JwtAuthConverter) {
             }
             .csrf { obj -> obj.disable() }
             .authorizeHttpRequests {
+                it.requestMatchers("/actuator/***").permitAll()
+                it.requestMatchers("/actuator").permitAll()
                 it.requestMatchers("/**").authenticated()
             }
             .sessionManagement { session ->

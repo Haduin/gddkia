@@ -5,6 +5,8 @@ spring:
   threads:
     virtual:
       enabled: true
+  jmx:
+    enabled: true
   jackson:
     date-format: dd-MM-yyyy HH:mm:ss
   datasource:
@@ -23,6 +25,20 @@ spring:
         jwt:
           issuer-uri: http://localhost:8081/realms/gddkia-realm
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+
+management:
+  endpoints:
+    jmx:
+      exposure:
+        include: '*'
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+
+
 
 jwt:
   auth:

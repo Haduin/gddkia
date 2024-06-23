@@ -10,6 +10,8 @@ services:
       - "61500:5432"
     volumes:
       - gddkia_postgres_data:/var/lib/postgresql/data
+    networks:
+      - keycloak_network
 
   keycloak_postgres_db:
     image: postgres:16.2
@@ -24,7 +26,7 @@ services:
       - keycloak_network
 
   keycloak:
-    image: quay.io/keycloak/keycloak
+    image: quay.io/keycloak/keycloak:25.0.1
     container_name: keycloak
     environment:
       KEYCLOAK_ADMIN: admin
@@ -33,6 +35,8 @@ services:
       KC_DB_URL: jdbc:postgresql://keycloak_postgres_db/mydb
       KC_DB_USERNAME: myuser
       KC_DB_PASSWORD: mypassword
+      KC_HEALTH_ENABLED: true
+      KC_METRICS_ENABLED: true
     networks:
       - keycloak_network
     ports:
@@ -40,6 +44,37 @@ services:
     depends_on:
       - keycloak_postgres_db
     command: start-dev
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./config/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - keycloak_network
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3333:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - keycloak_network
+
+  postgres-exporter:
+    image: bitnami/postgres-exporter
+    ports:
+      - "9187:9187"
+    environment:
+      DATA_SOURCE_NAME: "postgresql://myuser:mypassword@backend_postgres_db:5432/mydb?sslmode=disable"
+    depends_on:
+      - backend_postgres_db
+    networks:
+      - keycloak_network
 
 
 volumes:
