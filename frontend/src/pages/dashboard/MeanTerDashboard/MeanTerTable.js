@@ -2,7 +2,6 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { Box, Button, CircularProgress, Divider, Grid, Paper, TableContainer } from '@mui/material';
 import React, { useState } from 'react';
 import { fetchJobs } from './actions';
-import { useAuthentication } from '../../../hooks/useAuthentication';
 import DateSelector from '../../../components/DateSelector';
 import BranchSearch from '../../../components/BranchSearch';
 
@@ -21,7 +20,6 @@ const columns = [
 ];
 
 function Table() {
-  const { handleLogout } = useAuthentication();
   const [rows, setRows] = useState([]);
 
   const [selectedStartDate, setSelectedStartDate] = useState(null);
@@ -58,8 +56,7 @@ function Table() {
         return () => clearTimeout(timeout);
       })
       .catch(err => {
-        if (err.response.status === 403)
-          handleLogout();
+        console.log(err)
       });
   };
 
@@ -103,7 +100,7 @@ function Table() {
                     fullWidth
                     onClick={handleFetchData}
             >
-              Generuj dane
+              Pobierz dane
             </Button>
           </Grid>
         </Grid>
