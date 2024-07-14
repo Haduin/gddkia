@@ -16,7 +16,7 @@ const dashboard = {
   children: [
     {
       id: 'dashboard1',
-      title: 'Jednostkowe ceny prac',
+      title: 'Dodawanie nowego TER',
       type: 'item',
       url: '/app/ter',
       icon: icons.DashboardOutlined,

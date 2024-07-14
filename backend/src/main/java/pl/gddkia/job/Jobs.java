@@ -4,7 +4,11 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.gddkia.group.Group;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import pl.gddkia.estimate.Estimate;
+
+import java.util.Set;
 
 @Entity
 @AllArgsConstructor
@@ -23,9 +27,30 @@ public class Jobs {
     @Column(columnDefinition = "double precision default 1")
     private Double costEstimate;
     private Double quantity;
+    private String groupType;
     private String subType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_id")
-    private Group group;
+    @ManyToMany(mappedBy = "jobs")
+    private Set<Estimate> estimates;
+
+    public void addEstimate(Estimate estimate) {
+        this.estimates.add(estimate);
+        estimate.getJobs().forEach(e -> e.estimates.add(estimate));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Jobs jobs = (Jobs) o;
+
+        return new EqualsBuilder().append(id, jobs.id).append(SST, jobs.SST).append(description, jobs.description).append(unit, jobs.unit).append(costEstimate, jobs.costEstimate).append(quantity, jobs.quantity).append(groupType, jobs.groupType).append(subType, jobs.subType).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37).append(id).append(SST).append(description).append(unit).append(costEstimate).append(quantity).append(groupType).append(subType).toHashCode();
+    }
 }

@@ -6,6 +6,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -76,6 +78,7 @@ public class BranchServiceImpl implements BranchService {
         };
     }
 
+    @NotNull
     private RoadDataProcess readDataFromFile(final InputStream file) {
         List<RoadData> roadDataList = new ArrayList<>();
         List<String> errorMessages = new ArrayList<>();
@@ -116,6 +119,7 @@ public class BranchServiceImpl implements BranchService {
 
     }
 
+    @Nullable
     private String getStringCellValue(Row row, int cellIndex, List<String> errorMessages) {
         try {
             Cell cell = row.getCell(cellIndex);
@@ -126,6 +130,7 @@ public class BranchServiceImpl implements BranchService {
         }
     }
 
+    @Nullable
     private Double getNumericCellValue(Row row, int cellIndex, List<String> errorMessages) {
         try {
             Cell cell = row.getCell(cellIndex);
