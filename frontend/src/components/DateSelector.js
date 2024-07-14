@@ -6,7 +6,7 @@ import { Grid } from '@mui/material';
 const DateSelector = ({ selectedDate, setSelectedDate, label, setFormattedDate }) => {
 
   useEffect(() => {
-    setFormattedDate(selectedDate ? format(new Date(selectedDate), 'dd/MM/yyyy') : '');
+    setFormattedDate(selectedDate ? format(new Date(selectedDate), 'yyyy/MM/dd') : '');
   }, [selectedDate]);
 
   return (
@@ -16,7 +16,7 @@ const DateSelector = ({ selectedDate, setSelectedDate, label, setFormattedDate }
         autoWidth={true}
         label={label}
         value={selectedDate}
-        format="DD/MM/YYYY"
+        format="YYYY/MM/DD"
         onChange={(date) => setSelectedDate(date)}
         isRequired={true}
         slotProps={{ textField: { variant: 'outlined' } }}

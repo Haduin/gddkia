@@ -1,4 +1,4 @@
-package pl.gddkia.group;
+package pl.gddkia.job;
 
 public enum GROUP_NAME {
     NAWIERZCHNIA,
