@@ -79,7 +79,7 @@ public class EstimateServiceImpl implements EstimateService {
     }
 
     public LocalDate parseDate(String dateString) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         return LocalDate.parse(dateString, formatter);
     }
 

@@ -56,6 +56,7 @@ function Table() {
         return () => clearTimeout(timeout);
       })
       .catch(err => {
+        setLoading(false);
         console.log(err)
       });
   };
