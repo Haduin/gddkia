@@ -1,125 +1,153 @@
 import React, { useEffect, useState } from 'react';
-import { FormControl, Grid, InputLabel, MenuItem, Select } from '@mui/material';
+import { Grid } from '@mui/material';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+import drilldown from 'highcharts/modules/drilldown';
 import { fetchBranch } from '../../pages/dashboard/BranchDetails/action';
 
-const BranchSearch = ({
-                        selectedBranch,
-                        selectedRegion,
-                        selectedSection,
-                        setSelectedBranch,
-                        setSelectedRegion,
-                        setSelectedSection
-                      }) => {
-  const [data, setData] = useState([]);
-  const [filteredRegions, setFilteredRegions] = useState([]);
-  const [filteredSections, setFilteredSections] = useState([]);
 
-  const branches = [...new Set(data.map(item => item.branch))];
+drilldown(Highcharts);
+
+const getColorPalette = (length) => {
+  const colors = Highcharts.getOptions().colors;
+  const palette = [];
+  for (let i = 0; i < length; i++) {
+    palette.push(colors[i % colors.length]);
+  }
+  return palette;
+};
+
+const BranchSearch = () => {
+  const [chartOptions, setChartOptions] = useState(null);
 
   useEffect(() => {
-    fetchBranch().then(res => setData(res.data));
+    fetchBranch().then((res) => {
+      const branches = [...new Set(res.data.map((item) => item.branch))];
+      const branchColors = getColorPalette(branches.length);
+
+      const initialChartOptions = {
+        chart: {
+          type: 'column'
+        },
+        title: {
+          text: 'Branches Drilldown'
+        },
+        xAxis: {
+          type: 'category'
+        },
+        yAxis: {
+          title: {
+            text: 'Total'
+          }
+        },
+        series: [
+          {
+            name: 'Branches',
+            colorByPoint: true,
+            data: branches.map((branch, index) => ({
+              name: branch,
+              y: res.data.filter((item) => item.branch === branch).length,
+              drilldown: branch,
+              color: branchColors[index]
+            }))
+          }
+        ],
+        drilldown: {
+          series: branches
+            .map((branch) => {
+              const regions = [...new Set(res.data.filter((item) => item.branch === branch).map((item) => item.region))];
+              const regionColors = getColorPalette(regions.length);
+
+              return {
+                name: branch,
+                id: branch,
+                data: regions.map((region, index) => ({
+                  name: region,
+                  y: res.data.filter((item) => item.branch === branch && item.region === region).length,
+                  drilldown: `${branch}-${region}`,
+                  color: regionColors[index]
+                }))
+              };
+            })
+            .concat(
+              branches.flatMap((branch) => {
+                const regions = [...new Set(res.data.filter((item) => item.branch === branch).map((item) => item.region))];
+                return regions.map((region) => {
+                  const sections = [
+                    ...new Set(res.data.filter((item) => item.branch === branch && item.region === region).map((item) => item.section))
+                  ];
+                  const sectionColors = getColorPalette(sections.length);
+
+                  return {
+                    name: region,
+                    id: `${branch}-${region}`,
+                    data: sections.map((section, index) => ({
+                      name: section,
+                      y: res.data.filter((item) => item.branch === branch && item.region === region && item.section === section).length,
+                      drilldown: null,
+                      color: sectionColors[index]
+                    }))
+                  };
+                });
+              })
+            )
+        }
+      };
+
+      setChartOptions(initialChartOptions);
+    });
   }, []);
 
-  useEffect(() => {
-    if (selectedBranch) {
-      const regions = data
-        .filter(item => item.branch === selectedBranch)
-        .map(item => item.region);
-      setFilteredRegions([...new Set(regions)]);
-      setSelectedRegion([]);
-      setSelectedSection([]);
-    } else {
-      setFilteredRegions([]);
-      setSelectedRegion([]);
-      setSelectedSection([]);
+  const handlePointClick = (e) => {
+    const clickedPoint = e.point;
+    if (clickedPoint.drilldown) {
+      if (chartOptions.drilldown) {
+        const drilldownSeries = chartOptions.drilldown.series.find((series) => series.id === clickedPoint.drilldown);
+        if (drilldownSeries) {
+          setChartOptions({
+            ...chartOptions,
+            series: [
+              {
+                name: drilldownSeries.name,
+                colorByPoint: true,
+                data: drilldownSeries.data.map((regionData) => ({
+                  name: regionData.name,
+                  y: regionData.y,
+                  drilldown: regionData.drilldown,
+                  color: regionData.color
+                }))
+              }
+            ],
+            drilldown: {
+              series: chartOptions.drilldown.series.filter((series) => series.id !== clickedPoint.drilldown)
+            }
+          });
+        }
+      }
     }
-  }, [selectedBranch]);
+  };
 
-  useEffect(() => {
-    if (selectedRegion.length > 0) {
-      const sections = data
-        .filter(item => item.branch === selectedBranch && selectedRegion.includes(item.region))
-        .map(item => item.section);
-      setFilteredSections([...new Set(sections)]);
-      setSelectedSection([]);
-    } else {
-      setFilteredSections([]);
-      setSelectedSection([]);
-    }
-  }, [selectedRegion]);
-
-
-  return data.length ? (
-    <Grid container spacing={0.5}>
-      <Grid item xs={12} md={4}>
-        <FormControl fullWidth ariant="filled" sx={{ p: 1 }}>
-          <InputLabel id="branch-select-label">Oddział</InputLabel>
-          <Select
-            labelId="branch-select-label"
-            value={selectedBranch}
-            onChange={(e) => {
-              setSelectedBranch(e.target.value);
-              setSelectedRegion([]);
-              setSelectedSection([]);
+  return (
+    <Grid container spacing={1}>
+      <Grid item xs={12}>
+        {chartOptions && (
+          <HighchartsReact
+            highcharts={Highcharts}
+            options={chartOptions}
+            callback={(chart) => {
+              chart.series[0]?.points?.forEach((point) => {
+                point.update({
+                  events: {
+                    click: handlePointClick
+                  }
+                });
+              });
             }}
-          >
-
-            {branches.map((branch, index) => (
-              <MenuItem key={index} value={branch}>
-                {branch}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-      </Grid>
-
-      <Grid item xs={12} md={4}>
-        {selectedBranch.length > 0 && (
-          <FormControl fullWidth ariant="filled" sx={{ p: 1 }}>
-            <InputLabel id="region-select-label">Region</InputLabel>
-            <Select
-              multiple
-              labelId="region-select-label"
-              value={selectedRegion}
-              onChange={(e) => {
-                setSelectedRegion(e.target.value);
-                setSelectedSection([]);
-              }}
-            >
-              {filteredRegions.map((region, index) => (
-                <MenuItem key={index} value={region}>
-                  {region}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          />
         )}
       </Grid>
-
-      <Grid item xs={12} md={4}>
-        {selectedRegion.length > 0 && (
-          <FormControl fullWidth ariant="filled" sx={{ p: 1 }}>
-            <InputLabel id="section-select-label">Sektor</InputLabel>
-            <Select
-              multiple
-              labelId="section-select-label"
-              value={selectedSection}
-              onChange={(e) => setSelectedSection(e.target.value)}
-            >
-              {filteredSections.map((section, index) => (
-                <MenuItem key={index} value={section}>
-                  {section}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        )}
-      </Grid>
-
     </Grid>
-
-  ) : <></>;
+  );
 };
 
 export default BranchSearch;
