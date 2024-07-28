@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
+import org.jetbrains.kotlin.ir.backend.js.compile
 
 plugins {
 	java
@@ -57,9 +58,4 @@ dependencies {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
-}
-
-
-kotlin {
-	jvmToolchain(22)
 }

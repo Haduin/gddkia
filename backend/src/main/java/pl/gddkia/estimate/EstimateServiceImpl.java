@@ -16,7 +16,6 @@ import pl.gddkia.job.JobRest;
 
 import java.io.InputStream;
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +31,7 @@ public class EstimateServiceImpl implements EstimateService {
 
 
     private final Logger LOGGER = LogManager.getLogger(EstimateServiceImpl.class);
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
     @Transactional
     @Override
@@ -45,7 +44,7 @@ public class EstimateServiceImpl implements EstimateService {
 
         LOGGER.info("End of data");
         return switch (workBookService.addNewEstimateWorkbook(inputStream, estimate, branchList)) {
-            case WorkBookService.WorkbookCreationStatus.Successfully _ -> new MainResponse.EstimateSuccessful("OK");
+            case WorkBookService.WorkbookCreationStatus.Successfully successfully -> new MainResponse.EstimateSuccessful("OK");
             case WorkBookService.WorkbookCreationStatus.Failed failed ->
                     new MainResponse.EstimateError(failed.reason());
         };
@@ -79,7 +78,6 @@ public class EstimateServiceImpl implements EstimateService {
     }
 
     public LocalDate parseDate(String dateString) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         return LocalDate.parse(dateString, formatter);
     }
 
