@@ -10,10 +10,10 @@ public record BranchRest(
         String addressZipCity,
         String addressStreet,
         String phone,
-        double managedNetworkLength,
+        Double managedNetworkLength,
         String roadSectionAtDistrictHeadquarters,
-        double geoCoordinateX,
-        double geoCoordinateY,
+        Double geoCoordinateX,
+        Double geoCoordinateY,
         String notes
 ) {
 }

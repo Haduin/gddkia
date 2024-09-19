@@ -10,7 +10,8 @@ public enum GROUP_NAME {
     BRD,
     ESTETYKA,
     URZADZENIA_WSPOMAGAJACE,
-    ZARZADZENI_KONTRAKTEM,
+    ZIMOWE_UTRZYMANIE,
+    ZARZADZANIE_KONTRAKTEM,
     CZYSTOSC_NA_OBIEKTACH;
 
     public static GROUP_NAME findByValue(int value) {
@@ -24,8 +25,9 @@ public enum GROUP_NAME {
             case 7 -> BRD;
             case 8 -> ESTETYKA;
             case 9 -> URZADZENIA_WSPOMAGAJACE;
-            case 11 -> ZARZADZENI_KONTRAKTEM;
-            case 12 -> CZYSTOSC_NA_OBIEKTACH;
+            case 10, 11 -> ZIMOWE_UTRZYMANIE;
+            case 12 -> ZARZADZANIE_KONTRAKTEM;
+            case 13 -> CZYSTOSC_NA_OBIEKTACH;
             default -> throw new IllegalStateException("Unexpected value: " + value);
         };
     }

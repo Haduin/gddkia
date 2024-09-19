@@ -29,10 +29,10 @@ public class Branch {
     private String addressZipCity;
     private String addressStreet;
     private String phone;
-    private double managedNetworkLength;
+    private Double managedNetworkLength;
     private String roadSectionAtDistrictHeadquarters;
-    private double geoCoordinateX;
-    private double geoCoordinateY;
+    private Double geoCoordinateX;
+    private Double geoCoordinateY;
     private String notes;
 
 

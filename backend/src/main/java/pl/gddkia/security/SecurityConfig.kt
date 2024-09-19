@@ -23,8 +23,8 @@ class SecurityConfig(private val converter: JwtAuthConverter) {
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         return http
-            .cors { obj ->
-                obj.configurationSource {
+            .cors {
+                it.configurationSource {
                     val corsConfiguration = CorsConfiguration()
                     corsConfiguration.allowedOrigins = listOf(frontUri)
                     corsConfiguration.allowedMethods = listOf("GET", "POST", "PUT", "DELETE")
@@ -33,7 +33,7 @@ class SecurityConfig(private val converter: JwtAuthConverter) {
                     corsConfiguration
                 }
             }
-            .csrf { obj -> obj.disable() }
+            .csrf { it.disable() }
             .authorizeHttpRequests {
                 it.requestMatchers("/actuator/***").permitAll()
                 it.requestMatchers("/actuator").permitAll()

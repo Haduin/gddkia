@@ -26,6 +26,7 @@ public class Jobs {
     private String unit;
     @Column(columnDefinition = "double precision default 1")
     private Double costEstimate;
+    @Column(columnDefinition = "double precision default 1")
     private Double quantity;
     private String groupType;
     private String subType;

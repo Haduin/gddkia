@@ -45,9 +45,3 @@ jwt:
     converter:
       resource-id: gddkia-client-id
       principle-attribute: preferred_username
-
-logging:
-  level:
-    org:
-      springframework:
-        security: debug

@@ -17,6 +17,7 @@ import pl.gddkia.job.JobRest;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -42,7 +43,6 @@ public class EstimateServiceImpl implements EstimateService {
         Estimate estimate = new Estimate(null, rest.contractName(), parseDate(rest.dateFrom()), parseDate(rest.dateTo()), rest.roadLength(), branchList, null);
         branchList.forEach(branch -> branch.addEstimate(estimate));
 
-        LOGGER.info("End of data");
         return switch (workBookService.addNewEstimateWorkbook(inputStream, estimate, branchList)) {
             case WorkBookService.WorkbookCreationStatus.Successfully successfully -> new MainResponse.EstimateSuccessful("OK");
             case WorkBookService.WorkbookCreationStatus.Failed failed ->
@@ -78,7 +78,11 @@ public class EstimateServiceImpl implements EstimateService {
     }
 
     public LocalDate parseDate(String dateString) {
-        return LocalDate.parse(dateString, formatter);
+        try {
+            return LocalDate.parse(dateString, formatter);
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException("Invalid date format: " + dateString);
+        }
     }
 
 
