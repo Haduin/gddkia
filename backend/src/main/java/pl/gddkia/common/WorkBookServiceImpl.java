@@ -9,8 +9,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import pl.gddkia.branch.Branch;
+import pl.gddkia.common.winter.WinterWorkbookService;
 import pl.gddkia.estimate.Estimate;
 import pl.gddkia.estimate.EstimateRepository;
+import pl.gddkia.estimate.winter.WinterJob;
 import pl.gddkia.job.GROUP_NAME;
 import pl.gddkia.job.JobRepository;
 import pl.gddkia.job.Jobs;
@@ -30,6 +32,7 @@ import java.util.stream.Stream;
 public class WorkBookServiceImpl implements WorkBookService {
     private final JobRepository jobRepository;
     private final EstimateRepository estimateRepository;
+    private final WinterWorkbookService winterWorkbookService;
     private final Logger LOGGER = LogManager.getLogger(WorkBookServiceImpl.class);
     private final Integer FIRST_INDEX_TO_READ = 8;
     private final Integer ROW_INDEX_OF_MERGED_SUBGROUP = 0;
@@ -50,6 +53,8 @@ public class WorkBookServiceImpl implements WorkBookService {
                     //some kind of validation, might be changed to some FI in the future
                     .filter(Jobs::validate)
                     .collect(Collectors.toSet());
+
+
 
             jobRepository.saveAll(jobsList);
             estimate.setJobs(jobsList);

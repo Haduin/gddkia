@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import pl.gddkia.branch.Branch;
+import pl.gddkia.estimate.winter.WinterJob;
 import pl.gddkia.job.Jobs;
 
 import java.time.LocalDate;
@@ -46,6 +47,14 @@ public class Estimate {
             inverseJoinColumns = @JoinColumn(name = "jobs_id")
     )
     private Set<Jobs> jobs;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "estimate_winter_jobs",
+            joinColumns = @JoinColumn(name = "estimate_id"),
+            inverseJoinColumns = @JoinColumn(name = "winter_jobs_id")
+    )
+    private Set<WinterJob> winterJobs;
 
     @Override
     public boolean equals(Object o) {

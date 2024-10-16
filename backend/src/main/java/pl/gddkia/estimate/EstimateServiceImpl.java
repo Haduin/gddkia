@@ -40,7 +40,7 @@ public class EstimateServiceImpl implements EstimateService {
         LOGGER.info("Start saving data from file");
 
         Set<Branch> branchList = findSectionFromArrayString(rest.sectionName());
-        Estimate estimate = new Estimate(null, rest.contractName(), parseDate(rest.dateFrom()), parseDate(rest.dateTo()), rest.roadLength(), branchList, null);
+        Estimate estimate = new Estimate(null, rest.contractName(), parseDate(rest.dateFrom()), parseDate(rest.dateTo()), rest.roadLength(), branchList, null, null);
         branchList.forEach(branch -> branch.addEstimate(estimate));
 
         return switch (workBookService.addNewEstimateWorkbook(inputStream, estimate, branchList)) {
