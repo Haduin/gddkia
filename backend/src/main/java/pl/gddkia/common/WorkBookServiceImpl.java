@@ -32,6 +32,7 @@ public class WorkBookServiceImpl implements WorkBookService {
     private final EstimateRepository estimateRepository;
     private final Logger LOGGER = LogManager.getLogger(WorkBookServiceImpl.class);
     private final Integer FIRST_INDEX_TO_READ = 8;
+    private final Integer ROW_INDEX_OF_MERGED_SUBGROUP = 0;
 
 
     @Override
@@ -40,13 +41,15 @@ public class WorkBookServiceImpl implements WorkBookService {
 
         try (Workbook workbook = WorkbookFactory.create(inputStream)) {
 
-            final Set<Jobs> jobsList =
-                    IntStream.range(0, Math.min(workbook.getNumberOfSheets(), 9))
-//                            IntStream.range(11, Math.min(workbook.getNumberOfSheets(), 13))
-
-                            .mapToObj(sheetIndex -> processSheet(workbook.getSheetAt(sheetIndex), sheetIndex))
-                            .flatMap(Function.identity())
-                            .collect(Collectors.toSet());
+            final Set<Jobs> jobsList = IntStream.concat(
+                            IntStream.range(0, Math.min(workbook.getNumberOfSheets(), 9)),
+                            IntStream.range(12, Math.min(workbook.getNumberOfSheets(), 13))
+                    )
+                    .mapToObj(sheetIndex -> processSheet(workbook.getSheetAt(sheetIndex), sheetIndex))
+                    .flatMap(Function.identity())
+                    //some kind of validation, might be changed to some FI in the future
+                    .filter(Jobs::validate)
+                    .collect(Collectors.toSet());
 
             jobRepository.saveAll(jobsList);
             estimate.setJobs(jobsList);
@@ -77,17 +80,14 @@ public class WorkBookServiceImpl implements WorkBookService {
 
 
     private Stream<Jobs> processRow(Row row, int sheetIndex, SheetState state) {
-        String checkIfSubtype = getContentIfNotAllCellsEmpty(row);
+        String checkIfSubtype = checkIfRowIsSubGroupOnlyOrEmpty(row);
         if (StringUtils.isNotEmpty(checkIfSubtype)) {
             state.localSubType = checkIfSubtype;
-            state.count++;
-
             return Stream.empty();
         }
         // we check if row contains specific text - RAZEM . Meaning we can stop reading more rows
         if (state.skipRows && Objects.nonNull(row.getCell(0)) && row.getCell(0).toString().contains("RAZEM")) {
             state.skipRows = false;
-            state.count++;
             return Stream.empty();
         }
 
@@ -96,7 +96,6 @@ public class WorkBookServiceImpl implements WorkBookService {
             if (cell2 != null && StringUtils.isNotEmpty(cell2.toString())) {
                 state.sst = cell2.toString();
             }
-            state.count++;
 
             return Stream.of(
                     new Jobs(
@@ -143,24 +142,18 @@ public class WorkBookServiceImpl implements WorkBookService {
     }
 
     @Nullable
-    private String getContentIfNotAllCellsEmpty(@NotNull Row row) {
-        boolean hasNonEmptyCell = false;
+    private String checkIfRowIsSubGroupOnlyOrEmpty(@NotNull Row row) {
+        short sizeOfEmptyCells = 0;
 
         for (int i = row.getFirstCellNum(); i < row.getLastCellNum(); i++) {
             Cell cell = row.getCell(i);
 
-            //checks if something is under index of cell
-            if (i == 1 || i == 3) {
-                continue;
-            }
-
-            if (cell != null && cell.getCellType() != CellType.BLANK) {
-                hasNonEmptyCell = true;
-                break;
+            if (Objects.nonNull(cell) && cell.getCellType() == CellType.BLANK) {
+                sizeOfEmptyCells++;
             }
         }
 
-        return !hasNonEmptyCell ? row.getCell(3).toString() : null;
+        return row.getLastCellNum() == sizeOfEmptyCells + 1 ? row.getCell(ROW_INDEX_OF_MERGED_SUBGROUP).toString().trim() : "";
     }
 
     private boolean isRowEmpty(Row row) {

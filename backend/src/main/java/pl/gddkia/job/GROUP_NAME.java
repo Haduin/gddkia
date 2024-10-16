@@ -25,9 +25,9 @@ public enum GROUP_NAME {
             case 7 -> BRD;
             case 8 -> ESTETYKA;
             case 9 -> URZADZENIA_WSPOMAGAJACE;
-            case 10, 11 -> ZIMOWE_UTRZYMANIE;
-            case 12 -> ZARZADZANIE_KONTRAKTEM;
-            case 13 -> CZYSTOSC_NA_OBIEKTACH;
+            case 10, 11, 12 -> ZIMOWE_UTRZYMANIE;
+            case 13 -> ZARZADZANIE_KONTRAKTEM;
+            case 14 -> CZYSTOSC_NA_OBIEKTACH;
             default -> throw new IllegalStateException("Unexpected value: " + value);
         };
     }

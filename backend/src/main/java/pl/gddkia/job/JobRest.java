@@ -3,7 +3,6 @@ package pl.gddkia.job;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 
-@Builder
 public record JobRest(
         String SST,
         String description,

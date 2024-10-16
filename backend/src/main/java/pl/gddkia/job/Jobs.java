@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import pl.gddkia.estimate.Estimate;
@@ -37,6 +38,12 @@ public class Jobs {
     public void addEstimate(Estimate estimate) {
         this.estimates.add(estimate);
         estimate.getJobs().forEach(e -> e.estimates.add(estimate));
+    }
+
+    public boolean validate() {
+        return StringUtils.isNotEmpty(this.getDescription()) &&
+                StringUtils.isNotEmpty(this.getUnit());
+
     }
 
     @Override

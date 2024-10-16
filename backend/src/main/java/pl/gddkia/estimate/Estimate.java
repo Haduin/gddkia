@@ -3,16 +3,13 @@ package pl.gddkia.estimate;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.HashCodeExclude;
 import pl.gddkia.branch.Branch;
 import pl.gddkia.job.Jobs;
 
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 import java.util.Set;
 
 @Entity
