@@ -6,4 +6,5 @@ public interface WinterWorkbookService {
 
     void parseWinterASheet(final Sheet sheet);
     void parseWinterBSheet(final Sheet sheet);
+    void parseWinterCSheet(final Sheet sheet);
 }

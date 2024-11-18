@@ -12,16 +12,16 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class WinterJob {
+public class WinterJobA {
     @Id
-    @Column(name = "winter_job_id")
+    @Column(name = "winter_jobA_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "road_number")
-    private String roadNumber;
     @Column(name = "nr")
     private String nr;
+    @Column(name = "road_number")
+    private String roadNumber;
     @Column(name = "description")
     private String description;
     @Column(name = "road_length")
@@ -41,7 +41,7 @@ public class WinterJob {
     @Column(name = "km_quantity_snow")
     private String snowQuantitySnow;
 
-    @ManyToMany(mappedBy = "winterJobs")
+    @ManyToMany(mappedBy = "winterAJobs")
     private Set<Estimate> estimates;
 
 }

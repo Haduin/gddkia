@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import pl.gddkia.branch.Branch;
-import pl.gddkia.estimate.winter.WinterJob;
+import pl.gddkia.estimate.winter.WinterJobA;
 import pl.gddkia.job.Jobs;
 
 import java.time.LocalDate;
@@ -54,7 +54,7 @@ public class Estimate {
             joinColumns = @JoinColumn(name = "estimate_id"),
             inverseJoinColumns = @JoinColumn(name = "winter_jobs_id")
     )
-    private Set<WinterJob> winterJobs;
+    private Set<WinterJobA> winterAJobs;
 
     @Override
     public boolean equals(Object o) {

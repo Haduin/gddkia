@@ -12,7 +12,6 @@ import pl.gddkia.branch.Branch;
 import pl.gddkia.common.winter.WinterWorkbookService;
 import pl.gddkia.estimate.Estimate;
 import pl.gddkia.estimate.EstimateRepository;
-import pl.gddkia.estimate.winter.WinterJob;
 import pl.gddkia.job.GROUP_NAME;
 import pl.gddkia.job.JobRepository;
 import pl.gddkia.job.Jobs;
@@ -146,7 +145,7 @@ public class WorkBookServiceImpl implements WorkBookService {
         }
     }
 
-    @Nullable
+    @NotNull
     private String checkIfRowIsSubGroupOnlyOrEmpty(@NotNull Row row) {
         short sizeOfEmptyCells = 0;
 
